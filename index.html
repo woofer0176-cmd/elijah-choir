@@ -361,6 +361,11 @@ function showTab(id,el){
   document.getElementById(id).classList.add('active');
   if(el&&el.classList)el.classList.add('active');
 }
+// 페이지 로드 시 대원 탭 활성화
+window.onload = function(){
+  document.querySelectorAll('.content').forEach(c=>c.classList.remove('active'));
+  document.getElementById('members').classList.add('active');
+}
 </script>
 </body>
 </html>
