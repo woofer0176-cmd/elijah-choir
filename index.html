@@ -23,6 +23,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#faf8f3;color:#1a2820;line
 .nav-tab.active{color:#f0d98a;border-bottom-color:#c9a84c;}
 .content{display:none;}
 .content.active{display:block;}
+#members{display:block;}
 .song-card{background:#fffef9;border:1px solid #d0e8da;border-radius:16px;overflow:hidden;box-shadow:0 2px 14px rgba(26,74,53,0.10);margin:0 16px 24px;}
 .song-info{padding:18px 20px 14px;}
 .song-book{font-size:12px;color:#6a8a78;margin-bottom:4px;}
@@ -356,14 +357,15 @@ body{font-family:'Noto Sans KR',sans-serif;background:#faf8f3;color:#1a2820;line
 
 <script>
 function showTab(id,el){
-  document.querySelectorAll('.content').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('.content').forEach(c=>{c.classList.remove('active');c.style.display='none';});
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  document.getElementById(id).style.display='block';
   if(el&&el.classList)el.classList.add('active');
 }
-// 페이지 로드 시 대원 탭 활성화
 window.onload = function(){
-  document.querySelectorAll('.content').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('.content').forEach(c=>{c.classList.remove('active');c.style.display='none';});
+  document.getElementById('members').style.display='block';
   document.getElementById('members').classList.add('active');
 }
 </script>
