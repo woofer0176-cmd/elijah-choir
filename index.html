@@ -8,6 +8,13 @@
 <meta property="og:image" content="https://woofer0176-cmd.github.io/elijah-choir/logo.png">
 <meta property="og:url" content="https://woofer0176-cmd.github.io/elijah-choir">
 <title>엘리야 찬양대 · 청주 명암교회</title>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  document.querySelectorAll('.content').forEach(function(c){c.style.display='none';c.classList.remove('active');});
+  var m=document.getElementById('members');
+  if(m){m.style.display='block';m.classList.add('active');}
+});
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -23,7 +30,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:#faf8f3;color:#1a2820;line
 .nav-tab.active{color:#f0d98a;border-bottom-color:#c9a84c;}
 .content{display:none;}
 .content.active{display:block;}
-#members{display:block;}
 .song-card{background:#fffef9;border:1px solid #d0e8da;border-radius:16px;overflow:hidden;box-shadow:0 2px 14px rgba(26,74,53,0.10);margin:0 16px 24px;}
 .song-info{padding:18px 20px 14px;}
 .song-book{font-size:12px;color:#6a8a78;margin-bottom:4px;}
