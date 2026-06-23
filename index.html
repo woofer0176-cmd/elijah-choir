@@ -10,11 +10,15 @@
 <title>엘리야 찬양대 · 청주 명암교회</title>
 <script>
 document.addEventListener('DOMContentLoaded',function(){
-  document.querySelectorAll('.content').forEach(function(c){c.style.display='none';c.classList.remove('active');});
+  document.querySelectorAll('.content').forEach(function(c){c.style.display='none !important';c.style.setProperty('display','none','important');c.classList.remove('active');});
   var m=document.getElementById('members');
-  if(m){m.style.display='block';m.classList.add('active');}
+  if(m){m.style.setProperty('display','block','important');m.classList.add('active');}
 });
 </script>
+<style>
+.content{display:none !important;}
+.content.active{display:block !important;}
+</style>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -740,16 +744,16 @@ body{font-family:'Noto Sans KR',sans-serif;background:#faf8f3;color:#1a2820;line
 
 <script>
 function showTab(id,el){
-  document.querySelectorAll('.content').forEach(c=>{c.classList.remove('active');c.style.display='none';});
+  document.querySelectorAll('.content').forEach(c=>{c.classList.remove('active');});
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  document.getElementById(id).style.display='block';
+  var target = document.getElementById(id);
+  if(target){target.classList.add('active');}
   if(el&&el.classList)el.classList.add('active');
 }
 window.onload = function(){
-  document.querySelectorAll('.content').forEach(c=>{c.classList.remove('active');c.style.display='none';});
-  document.getElementById('members').style.display='block';
-  document.getElementById('members').classList.add('active');
+  document.querySelectorAll('.content').forEach(c=>{c.classList.remove('active');});
+  var m = document.getElementById('members');
+  if(m){m.classList.add('active');}
 }
 function openPlayer(url, title){
   document.getElementById('player-title').textContent = title;
@@ -760,6 +764,36 @@ function closePlayer(){
   document.getElementById('player-modal').style.display = 'none';
   document.getElementById('player-iframe').src = '';
 }
+</script>
+
+<div id="member-photo-modal" onclick="closeMemberPhoto()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:99999;justify-content:center;align-items:center;flex-direction:column;padding:24px;box-sizing:border-box;">
+  <img id="member-photo-img" src="" alt="" style="max-width:86vw;max-height:70vh;border-radius:18px;object-fit:contain;background:#fff;box-shadow:0 10px 50px rgba(0,0,0,0.55);">
+  <div id="member-photo-name" style="color:#fff;font-size:19px;font-weight:700;margin-top:18px;text-align:center;"></div>
+  <div style="color:#bbb;font-size:13px;margin-top:8px;text-align:center;">화면을 누르면 닫혀요</div>
+  <div onclick="closeMemberPhoto()" style="position:fixed;top:18px;right:20px;color:#fff;font-size:30px;font-weight:700;line-height:1;cursor:pointer;">&times;</div>
+</div>
+<script>
+function openMemberPhoto(src, name){
+  document.getElementById('member-photo-img').src = src;
+  document.getElementById('member-photo-name').textContent = name || '';
+  document.getElementById('member-photo-modal').style.display = 'flex';
+}
+function closeMemberPhoto(){
+  document.getElementById('member-photo-modal').style.display = 'none';
+  document.getElementById('member-photo-img').src = '';
+}
+document.addEventListener('DOMContentLoaded', function(){
+  document.querySelectorAll('img[style*="border-radius:50%"]').forEach(function(im){
+    im.style.cursor = 'pointer';
+    im.addEventListener('click', function(e){
+      e.stopPropagation();
+      var p = im.parentElement;
+      var divs = p ? p.querySelectorAll(':scope > div') : [];
+      var nm = divs.length ? divs[divs.length-1].textContent.trim() : '';
+      openMemberPhoto(im.src, nm);
+    });
+  });
+});
 </script>
 </body>
 </html>
