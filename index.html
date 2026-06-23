@@ -10,9 +10,9 @@
 <title>엘리야 찬양대 · 청주 명암교회</title>
 <script>
 document.addEventListener('DOMContentLoaded',function(){
-  document.querySelectorAll('.content').forEach(function(c){c.style.display='none !important';c.style.setProperty('display','none','important');c.classList.remove('active');});
+  document.querySelectorAll('.content').forEach(function(c){c.style.removeProperty('display');c.classList.remove('active');});
   var m=document.getElementById('members');
-  if(m){m.style.setProperty('display','block','important');m.classList.add('active');}
+  if(m){m.classList.add('active');}
 });
 </script>
 <style>
@@ -744,7 +744,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#faf8f3;color:#1a2820;line
 
 <script>
 function showTab(id,el){
-  document.querySelectorAll('.content').forEach(c=>{c.classList.remove('active');});
+  document.querySelectorAll('.content').forEach(c=>{c.classList.remove('active');c.style.removeProperty('display');});
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   var target = document.getElementById(id);
   if(target){target.classList.add('active');}
