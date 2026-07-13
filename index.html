@@ -29,9 +29,9 @@ body{font-family:'Noto Sans KR',sans-serif;background:#faf8f3;color:#1a2820;line
 .church-name{font-size:12px;letter-spacing:4px;color:#8a6a20;font-weight:500;margin-bottom:10px;}
 .choir-name{font-family:'Noto Serif KR',serif;font-size:30px;font-weight:700;color:#2a1a05;margin-bottom:6px;}
 .choir-sub{font-size:13px;color:#8a7a50;letter-spacing:2px;}
-.nav-tabs{display:flex;background:#0f2e1e;position:sticky;top:0;z-index:10;overflow-x:auto;-webkit-overflow-scrolling:touch;}
-.nav-tab{flex:1;min-width:0;padding:8px 2px;text-align:center;font-size:11px;font-weight:500;color:rgba(255,255,255,0.5);cursor:pointer;border-bottom:3px solid transparent;transition:all 0.2s;white-space:normal;line-height:1.3;}
-.nav-tab.active{color:#f0d98a;border-bottom-color:#c9a84c;}
+.nav-tabs{display:flex;background:#0d3352;position:sticky;top:0;z-index:10;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.nav-tab{flex:1;min-width:0;padding:12px 2px;text-align:center;font-size:13px;font-weight:700;color:rgba(255,255,255,0.9);cursor:pointer;border-bottom:3px solid transparent;transition:all 0.2s;white-space:normal;line-height:1.5;}
+.nav-tab.active{color:#7ee8fa;border-bottom-color:#7ee8fa;}
 .content{display:none !important;}
 .content.active{display:block !important;}
 .song-card{background:#fffef9;border:1px solid #d0e8da;border-radius:16px;overflow:hidden;box-shadow:0 2px 14px rgba(26,74,53,0.10);margin:0 16px 24px;}
@@ -97,15 +97,87 @@ body{font-family:'Noto Sans KR',sans-serif;background:#faf8f3;color:#1a2820;line
 </header>
 
 <nav class="nav-tabs">
-  <div class="nav-tab active" onclick="showTab('members',this)">👥 대원</div>
-  <div class="nav-tab" onclick="showTab('this-month',this)" style="text-align:left;padding-left:4px;">이달의<br>찬양 🎵</div>
-  <div class="nav-tab" onclick="showTab('next-month',this)" style="text-align:left;padding-left:4px;">다음달<br>찬양 🎶</div>
-  <div class="nav-tab" onclick="showTab('two-months',this)" style="text-align:left;padding-left:4px;">두달후<br>찬양 🌿</div>
-  <div class="nav-tab" onclick="showTab('archive',this)" style="text-align:left;padding-left:4px;">지난<br>찬양 📂</div>
-  <div class="nav-tab" onclick="showTab('songyoung',this)">🎼 송영곡</div>
-  <div class="nav-tab" onclick="showTab('notice',this)">📢 공지</div>
-  <div class="nav-tab" onclick="showTab('resources',this)">📚 자료실</div>
+  <div class="nav-tab active" onclick="showTab('members',this)"><div style="font-size:16px;">👥</div><div style="font-size:11px;">대원</div></div>
+  <div class="nav-tab" onclick="showTab('this-month',this)"><div style="font-size:16px;">🎵</div><div style="font-size:11px;">이달찬양</div></div>
+  <div class="nav-tab" onclick="showTab('next-month',this)"><div style="font-size:16px;">🎶</div><div style="font-size:11px;">다음달</div></div>
+  <div class="nav-tab" onclick="showTab('two-months',this)"><div style="font-size:16px;">🌿</div><div style="font-size:11px;">두달후</div></div>
+  <div class="nav-tab" onclick="showTab('archive',this)"><div style="font-size:16px;">📂</div><div style="font-size:11px;">지난찬양</div></div>
+  <div class="nav-tab" onclick="showTab('songyoung',this)"><div style="font-size:16px;">🎼</div><div style="font-size:11px;">송영곡</div></div>
+  <div class="nav-tab" onclick="showTab('notice',this)"><div style="font-size:16px;">📢</div><div style="font-size:11px;">공지</div></div>
+  <div class="nav-tab" onclick="showTab('resources',this)"><div style="font-size:16px;">📚</div><div style="font-size:11px;">자료실</div></div>
 </nav>
+
+<!-- 🌊 이번주/다음주 고정 코너 -->
+<div id="fixed-song-corner" style="background:linear-gradient(135deg,#0d3352 0%,#1a5a8a 100%);padding:16px 16px 14px;position:sticky;top:52px;z-index:9;">
+  <div style="font-size:12px;font-weight:700;color:#7ee8fa;margin-bottom:10px;letter-spacing:1px;">🎵 이번주 · 다음주 찬양</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+    <div style="background:rgba(255,255,255,0.12);border-radius:10px;padding:10px;text-align:center;">
+      <div style="font-size:10px;color:#a8d8f0;margin-bottom:3px;" id="this-week-label">이번주 주일</div>
+      <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:7px;line-height:1.3;" id="this-week-title">로딩중...</div>
+      <button onclick="playAutoSong('this')" style="background:#7ee8fa;color:#0d3352;border:none;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;">▶ 듣기</button>
+    </div>
+    <div style="background:rgba(255,255,255,0.12);border-radius:10px;padding:10px;text-align:center;">
+      <div style="font-size:10px;color:#a8d8f0;margin-bottom:3px;" id="next-week-label">다음주 주일</div>
+      <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:7px;line-height:1.3;" id="next-week-title">로딩중...</div>
+      <button onclick="playAutoSong('next')" style="background:#f0d98a;color:#0d3352;border:none;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;">▶ 듣기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var songData = [
+  {week:'7월 1주', date:'2026-07-05', title:'야곱의 축복', url:'https://joongangart.kr/GoodNews2/22/pop1.html'},
+  {week:'7월 2주', date:'2026-07-12', title:'시편 8편', url:'https://joongangart.kr/GoodNews2/18/pop1.html'},
+  {week:'7월 3주', date:'2026-07-19', title:'누군가 널 위해 기도하네', url:'https://joongangart.kr/GoodNews2/23/pop1.html'},
+  {week:'7월 4주', date:'2026-07-26', title:'비 준비하시니', url:''},
+];
+var autoUrls = {this:'', next:''};
+(function(){
+  var today = new Date();
+  // 오늘 기준 돌아오는 주일(일요일) 찾기
+  var day = today.getDay(); // 0=일, 1=월 ... 6=토
+  var daysUntilSunday = day === 0 ? 0 : 7 - day;
+  var thisSunday = new Date(today);
+  thisSunday.setDate(today.getDate() + daysUntilSunday);
+  thisSunday.setHours(0,0,0,0);
+  var nextSunday = new Date(thisSunday);
+  nextSunday.setDate(thisSunday.getDate() + 7);
+
+  var thisWeekSong = null, nextWeekSong = null;
+  for(var i=0;i<songData.length;i++){
+    var d = new Date(songData[i].date);
+    d.setHours(0,0,0,0);
+    if(d.getTime() === thisSunday.getTime()) thisWeekSong = songData[i];
+    if(d.getTime() === nextSunday.getTime()) nextWeekSong = songData[i];
+  }
+  // 못찾으면 가장 가까운 미래 곡으로
+  if(!thisWeekSong){
+    for(var i=0;i<songData.length;i++){
+      var d = new Date(songData[i].date); d.setHours(0,0,0,0);
+      if(d >= thisSunday){ thisWeekSong = songData[i]; break; }
+    }
+  }
+  if(!nextWeekSong && thisWeekSong){
+    var idx = songData.indexOf(thisWeekSong);
+    if(idx+1 < songData.length) nextWeekSong = songData[idx+1];
+  }
+  if(thisWeekSong){
+    document.getElementById('this-week-label').textContent = thisWeekSong.week + ' (' + thisWeekSong.date.slice(5).replace('-','/') + ')';
+    document.getElementById('this-week-title').textContent = thisWeekSong.title;
+    autoUrls.this = thisWeekSong.url;
+  }
+  if(nextWeekSong){
+    document.getElementById('next-week-label').textContent = nextWeekSong.week + ' (' + nextWeekSong.date.slice(5).replace('-','/') + ')';
+    document.getElementById('next-week-title').textContent = nextWeekSong.title;
+    autoUrls.next = nextWeekSong.url;
+  }
+})();
+function playAutoSong(which){
+  var url = autoUrls[which];
+  if(!url){ alert('악보가 아직 준비 중입니다.'); return; }
+  openPlayer(url, which==='this' ? document.getElementById('this-week-title').textContent : document.getElementById('next-week-title').textContent);
+}
+</script>
 
 <!-- 이달의 찬양 -->
 <div id="this-month" class="content">
@@ -370,6 +442,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:#faf8f3;color:#1a2820;line
 
 <!-- 대원 -->
 <div id="members" class="content active">
+
+
   <div style="background:linear-gradient(135deg,#1a4a35 0%,#0f2e1e 100%);padding:24px 20px;">
     <h2 style="font-family:'Noto Serif KR',serif;font-size:20px;color:#fff;font-weight:600;margin-bottom:4px;">엘리야 찬양대 대원</h2>
     <p style="font-size:13px;color:rgba(255,255,255,0.6);">2026년 찬양대 조직</p>
@@ -444,83 +518,14 @@ body{font-family:'Noto Sans KR',sans-serif;background:#faf8f3;color:#1a2820;line
     <h2 style="font-family:'Noto Serif KR',serif;font-size:20px;font-weight:700;color:#f0d98a;margin:0 0 6px;">두달후 찬양 🌿</h2>
     <p style="font-size:13px;color:#a8c8e8;margin:0;">2026년 9월 예정 찬양</p>
   </div>
-
   <div class="week-header"><div class="week-badge">9월 1주</div><div class="week-date">9월 6일 (주일)</div></div>
-  <div class="song-card">
-    <div class="song-info">
-      <div class="song-book">기쁨의 소식2 · 04번</div>
-      <div class="song-title">주의 사랑을 주의 선하심을</div>
-    </div>
-    <div class="video-wrap">
-      <iframe src="https://joongangart.kr/GoodNews2/04/pop1.html" allowfullscreen></iframe>
-    </div>
-    <div class="parts-grid">
-      <a class="part-btn main" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/04/pop1.html','합창');return false;">합창</a>
-      <a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/04/pop2.html','소프 | Vocal');return false;">소프 | Vocal</a>
-      <a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/04/pop3.html','알토 | Vocal');return false;">알토 | Vocal</a>
-      <a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/04/pop4.html','테너 | Vocal');return false;">테너 | Vocal</a>
-      <a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/04/pop5.html','베이스 | Vocal');return false;">베이스 | Vocal</a>
-      <a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/04/pop6.html','반주 | Piano');return false;">반주 | Piano</a>
-    </div>
-  </div>
-
+  <div class="song-card"><div class="song-info"><div class="song-book">기쁨의 소식2 · 04번</div><div class="song-title">주의 사랑을 주의 선하심을</div></div><div class="video-wrap"><iframe src="https://joongangart.kr/GoodNews2/04/pop1.html" allowfullscreen></iframe></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/04/pop1.html','합창');return false;">합창</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/04/pop2.html','소프');return false;">소프</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/04/pop3.html','알토');return false;">알토</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/04/pop4.html','테너');return false;">테너</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/04/pop5.html','베이스');return false;">베이스</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/04/pop6.html','반주');return false;">반주</a></div></div>
   <div class="week-header"><div class="week-badge">9월 2주</div><div class="week-date">9월 13일 (주일)</div></div>
-  <div class="song-card">
-    <div class="song-info">
-      <div class="song-book">기쁨의 소식2 · 09번</div>
-      <div class="song-title">오 신실하신 주</div>
-    </div>
-    <div class="video-wrap">
-      <iframe src="https://joongangart.kr/GoodNews2/09/pop1.html" allowfullscreen></iframe>
-    </div>
-    <div class="parts-grid">
-      <a class="part-btn main" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/09/pop1.html','합창');return false;">합창</a>
-      <a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/09/pop2.html','소프 | Vocal');return false;">소프 | Vocal</a>
-      <a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/09/pop3.html','알토 | Vocal');return false;">알토 | Vocal</a>
-      <a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/09/pop4.html','테너 | Vocal');return false;">테너 | Vocal</a>
-      <a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/09/pop5.html','베이스 | Vocal');return false;">베이스 | Vocal</a>
-      <a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/09/pop6.html','반주 | Piano');return false;">반주 | Piano</a>
-    </div>
-  </div>
-
+  <div class="song-card"><div class="song-info"><div class="song-book">기쁨의 소식2 · 09번</div><div class="song-title">오 신실하신 주</div></div><div class="video-wrap"><iframe src="https://joongangart.kr/GoodNews2/09/pop1.html" allowfullscreen></iframe></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/09/pop1.html','합창');return false;">합창</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/09/pop2.html','소프');return false;">소프</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/09/pop3.html','알토');return false;">알토</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/09/pop4.html','테너');return false;">테너</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/09/pop5.html','베이스');return false;">베이스</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/09/pop6.html','반주');return false;">반주</a></div></div>
   <div class="week-header"><div class="week-badge">9월 3주</div><div class="week-date">9월 20일 (주일)</div></div>
-  <div class="song-card">
-    <div class="song-info">
-      <div class="song-book">기쁨의 소식2 · 10번</div>
-      <div class="song-title">주여 이 죄인이</div>
-    </div>
-    <div class="video-wrap">
-      <iframe src="https://joongangart.kr/GoodNews2/10/pop1.html" allowfullscreen></iframe>
-    </div>
-    <div class="parts-grid">
-      <a class="part-btn main" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/10/pop1.html','합창');return false;">합창</a>
-      <a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/10/pop2.html','소프 | Vocal');return false;">소프 | Vocal</a>
-      <a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/10/pop3.html','알토 | Vocal');return false;">알토 | Vocal</a>
-      <a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/10/pop4.html','테너 | Vocal');return false;">테너 | Vocal</a>
-      <a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/10/pop5.html','베이스 | Vocal');return false;">베이스 | Vocal</a>
-      <a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/10/pop6.html','반주 | Piano');return false;">반주 | Piano</a>
-    </div>
-  </div>
-
+  <div class="song-card"><div class="song-info"><div class="song-book">기쁨의 소식2 · 10번</div><div class="song-title">주여 이 죄인이</div></div><div class="video-wrap"><iframe src="https://joongangart.kr/GoodNews2/10/pop1.html" allowfullscreen></iframe></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/10/pop1.html','합창');return false;">합창</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/10/pop2.html','소프');return false;">소프</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/10/pop3.html','알토');return false;">알토</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/10/pop4.html','테너');return false;">테너</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/10/pop5.html','베이스');return false;">베이스</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/10/pop6.html','반주');return false;">반주</a></div></div>
   <div class="week-header"><div class="week-badge">9월 4주</div><div class="week-date">9월 27일 (주일)</div></div>
-  <div class="song-card">
-    <div class="song-info">
-      <div class="song-book">기쁨의 소식2 · 14번</div>
-      <div class="song-title">주께 가오니</div>
-    </div>
-    <div class="video-wrap">
-      <iframe src="https://joongangart.kr/GoodNews2/14/pop1.html" allowfullscreen></iframe>
-    </div>
-    <div class="parts-grid">
-      <a class="part-btn main" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/14/pop1.html','합창');return false;">합창</a>
-      <a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/14/pop2.html','소프 | Vocal');return false;">소프 | Vocal</a>
-      <a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/14/pop3.html','알토 | Vocal');return false;">알토 | Vocal</a>
-      <a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/14/pop4.html','테너 | Vocal');return false;">테너 | Vocal</a>
-      <a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/14/pop5.html','베이스 | Vocal');return false;">베이스 | Vocal</a>
-      <a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/14/pop6.html','반주 | Piano');return false;">반주 | Piano</a>
-    </div>
-  </div>
-
+  <div class="song-card"><div class="song-info"><div class="song-book">기쁨의 소식2 · 14번</div><div class="song-title">주께 가오니</div></div><div class="video-wrap"><iframe src="https://joongangart.kr/GoodNews2/14/pop1.html" allowfullscreen></iframe></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/14/pop1.html','합창');return false;">합창</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/14/pop2.html','소프');return false;">소프</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/14/pop3.html','알토');return false;">알토</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/14/pop4.html','테너');return false;">테너</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/14/pop5.html','베이스');return false;">베이스</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/GoodNews2/14/pop6.html','반주');return false;">반주</a></div></div>
 </div>
 
 <!-- 송영곡 -->
@@ -672,10 +677,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#faf8f3;color:#1a2820;line
   <div style="background:#eef3f8;padding:16px 0 100px;"><div style="margin:0 16px 24px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><div style="background:#1a3a5c;color:#f0d98a;font-size:14px;font-weight:700;padding:6px 16px;border-radius:20px;">2026년 1월</div><div style="font-size:13px;color:#888;">4곡</div></div><div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">1월 4일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">일어나 걸어라</div></div><a href="https://drive.google.com/file/d/1E0v0IEjD9UOvkVwwjUMZPLJEut3B9HaV/view?usp=share_link" target="_blank" style="background:#1a3a5c;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div><div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">1월 11일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">주의 빛</div></div><a href="https://drive.google.com/file/d/12vm070JovsqRZVd3zW_2LahI96tnuiI7/view?usp=share_link" target="_blank" style="background:#1a3a5c;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div><div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">1월 18일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">주 예수 내맘에 오심</div></div><a href="https://drive.google.com/file/d/1OxPYpC3mucQ5VSHsIT0P3wT8ephEaR8O/view?usp=share_link" target="_blank" style="background:#1a3a5c;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div><div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">1월 25일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">나 주의 믿음 갖고</div></div><a href="https://drive.google.com/file/d/1ZbT4_hZDBVWTRUwRG-sXF2CD2ufjYQu3/view?usp=share_link" target="_blank" style="background:#1a3a5c;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div></div><div style="margin:0 16px 24px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><div style="background:#3a1a5c;color:#f0d98a;font-size:14px;font-weight:700;padding:6px 16px;border-radius:20px;">2026년 2월</div><div style="font-size:13px;color:#888;">3곡</div></div><div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">2월 1일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">평안하여라</div></div><a href="https://drive.google.com/file/d/15tFHRRJ-kiGyRj74Gudn-Xbx8l2-FhoH/view?usp=share_link" target="_blank" style="background:#3a1a5c;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div><div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">2월 15일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">우리 모두 찬양하자</div></div><a href="https://drive.google.com/file/d/16PB7s-fFYWt_-f70yQX02SMVWTyb5p7b/view?usp=share_link" target="_blank" style="background:#3a1a5c;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div><div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">2월 22일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">호산나 왕의 왕</div></div><a href="https://drive.google.com/file/d/1no2xB2F2h03a2GHI6OnEOvyP14fExR1g/view?usp=share_link" target="_blank" style="background:#3a1a5c;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div></div><div style="margin:0 16px 24px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><div style="background:#1a4a35;color:#f0d98a;font-size:14px;font-weight:700;padding:6px 16px;border-radius:20px;">2026년 3월</div><div style="font-size:13px;color:#888;">5곡</div></div><div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">3월 1일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">기억하라</div></div><a href="https://drive.google.com/file/d/1PMYYnrac6Huz7zNKxrBtjU91qF9vcomp/view?usp=share_link" target="_blank" style="background:#1a4a35;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div><div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">3월 8일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">주 외로이 기도하네</div></div><a href="https://drive.google.com/file/d/1_W_AghL2PHGk2AXReIW8QPQ-gCsdoG2i/view?usp=share_link" target="_blank" style="background:#1a4a35;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div><div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">3월 15일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">버림받고 모욕과 조롱당했네</div></div><a href="https://drive.google.com/file/d/1R5A2xTUnY78TJcknXzVWU136Dhed6Tf6/view?usp=share_link" target="_blank" style="background:#1a4a35;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div><div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">3월 22일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">그는 실로 우리의 질고를 지고</div></div><a href="https://drive.google.com/file/d/1PtU3PJWpJUxfqgxnoBRsFmzE1A19Wcfr/view?usp=share_link" target="_blank" style="background:#1a4a35;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div><div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">3월 29일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">더 큰 사랑이 없나니</div></div><a href="https://drive.google.com/file/d/1k2YCgL5k1MNMr9JXtE2_L5EDjn1JoljA/view?usp=share_link" target="_blank" style="background:#1a4a35;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div></div><div style="margin:0 16px 24px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><div style="background:#5c2a1a;color:#f0d98a;font-size:14px;font-weight:700;padding:6px 16px;border-radius:20px;">2026년 4월</div><div style="font-size:13px;color:#888;">4곡</div></div><div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">4월 5일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">예수 다시 사셨다</div></div><a href="https://drive.google.com/file/d/1k-_8TAzDfDmPyLX9Flc6av1hUPr4tK-m/view?usp=share_link" target="_blank" style="background:#5c2a1a;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div><div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">4월 12일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">이제 역전되리라</div></div><a href="https://drive.google.com/file/d/17_1W7UbqQ6nQWeUxvkWRM8pyDRgjPh2r/view?usp=share_link" target="_blank" style="background:#5c2a1a;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div><div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">4월 19일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">유월절 어린 양의 피로</div></div><a href="https://drive.google.com/file/d/11pMugBlrJ_C8HneXKzucW-1eHeRrC8_B/view?usp=share_link" target="_blank" style="background:#5c2a1a;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div><div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">4월 26일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">다시 복음 앞에</div></div><a href="https://drive.google.com/file/d/1GBzB6LXVDcc5OnE1zu1WpYYlSPV8CnL1/view?usp=share_link" target="_blank" style="background:#5c2a1a;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div></div><div style="margin:0 16px 24px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><div style="background:#3a4a1a;color:#f0d98a;font-size:14px;font-weight:700;padding:6px 16px;border-radius:20px;">2026년 5월</div><div style="font-size:13px;color:#888;">5곡</div></div><div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">5월 3일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">너는 꽃이야</div></div><a href="https://drive.google.com/file/d/12-aMR5JLDMfHu5bbga5GZ4pJ2EZJtCZ9/view?usp=share_link" target="_blank" style="background:#3a4a1a;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div><div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">5월 10일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">어머니의 기도</div></div><a href="https://drive.google.com/file/d/11jImXBnzUJ-rN3RfxMeF6gxPaQ3RI96j/view?usp=share_link" target="_blank" style="background:#3a4a1a;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div><div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">5월 17일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">나의 안에 거하라</div></div><a href="https://drive.google.com/file/d/1eSPzTDrgvLVfh5SYUa-BlKKNzRcJ1wQk/view?usp=share_link" target="_blank" style="background:#3a4a1a;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div><div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">5월 24일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">성령이 오셨네</div></div><a href="https://drive.google.com/file/d/1JD2m4RUNGvvezLYD6Sw3BEzij-tC5F9X/view?usp=share_link" target="_blank" style="background:#3a4a1a;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div><div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">5월 31일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">기대</div></div><a href="https://drive.google.com/file/d/1o12mdG2jBOLAb9R6IGaoo_0vi1rrDKJk/view?usp=share_link" target="_blank" style="background:#3a4a1a;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div></div>
 <div style="margin:0 16px 24px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><div style="background:#2a4a6a;color:#f0d98a;font-size:14px;font-weight:700;padding:6px 16px;border-radius:20px;">2026년 6월</div><div style="font-size:13px;color:#888;">4곡</div></div><div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">6월 7일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">실로암</div></div><a href="https://drive.google.com/file/d/1YLo32RhVqa06jajKCzxRgOwOG6WuzH7J/view?usp=share_link" target="_blank" style="background:#2a4a6a;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div>
 <div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">6월 14일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">나 무엇과도 주님을</div></div><a href="https://drive.google.com/file/d/1It1agDHcSxMwHUzFAvAH5NsEcbJTgXiY/view?usp=share_link" target="_blank" style="background:#2a4a6a;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div>
-<div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">6월 21일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">그들은 주가 필요해</div></div><a href="https://drive.google.com/file/d/1rpp_bb-bpVrGryZvzsslSm-p-HD_GU99/view?usp=share_link" target="_blank" style="background:#2a4a6a;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div><div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">6월 28일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">언제나 어떤 상황에서도</div></div><a href="https://drive.google.com/file/d/13ZARzi8GZw2xcRt5XlG_YGps1SG3_03a/view?usp=share_link" target="_blank" style="background:#2a4a6a;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div></div></div><div style="margin:0 16px 24px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><div style="background:#1a3a5c;color:#f0d98a;font-size:14px;font-weight:700;padding:6px 16px;border-radius:20px;">2026년 7월</div><div style="font-size:13px;color:#888;">2곡</div></div>
-<div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">7월 5일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">야곱의 축복</div></div><a href="https://drive.google.com/file/d/1Q3gXUqT8Xi44vSahF5LQwfOW8q1iXY4t/view?usp=share_link" target="_blank" style="background:#1a3a5c;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div>
-<div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">7월 12일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">시편 8편</div></div><a href="https://drive.google.com/file/d/1uVL6W4xmE-VogXcCYMtoqdhpqBYE5VnZ/view?usp=share_link" target="_blank" style="background:#1a3a5c;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div>
-</div>
+<div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">6월 21일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">그들은 주가 필요해</div></div><a href="https://drive.google.com/file/d/1rpp_bb-bpVrGryZvzsslSm-p-HD_GU99/view?usp=share_link" target="_blank" style="background:#2a4a6a;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div><div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">6월 28일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">언제나 어떤 상황에서도</div></div><a href="https://drive.google.com/file/d/13ZARzi8GZw2xcRt5XlG_YGps1SG3_03a/view?usp=share_link" target="_blank" style="background:#2a4a6a;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div></div></div><div style="margin:0 16px 24px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><div style="background:#1a3a5c;color:#f0d98a;font-size:14px;font-weight:700;padding:6px 16px;border-radius:20px;">2026년 7월</div><div style="font-size:13px;color:#888;">2곡</div></div><div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">7월 5일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">야곱의 축복</div></div><a href="https://drive.google.com/file/d/1Q3gXUqT8Xi44vSahF5LQwfOW8q1iXY4t/view?usp=share_link" target="_blank" style="background:#1a3a5c;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div><div style="background:#fffef9;border:1px solid #ddd;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;color:#a08060;margin-bottom:3px;">7월 12일 · 엘리야</div><div style="font-size:16px;font-weight:700;color:#2a1a05;">시편 8편</div></div><a href="https://drive.google.com/file/d/1uVL6W4xmE-VogXcCYMtoqdhpqBYE5VnZ/view?usp=share_link" target="_blank" style="background:#1a3a5c;color:#f0d98a;font-size:14px;font-weight:600;padding:10px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;">▶ 듣기</a></div></div>
 </div>
 
 <footer class="site-footer"><span>엘리야 찬양대</span><br>청주 명암교회 · 2026<br>단원 전용 페이지</footer>
