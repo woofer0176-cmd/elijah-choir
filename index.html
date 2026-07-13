@@ -128,7 +128,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#faf8f3;color:#1a2820;line
 var songData = [
   {week:'7월 1주', date:'2026-07-05', title:'야곱의 축복', url:'https://joongangart.kr/GoodNews2/22/pop1.html'},
   {week:'7월 2주', date:'2026-07-12', title:'시편 8편', url:'https://joongangart.kr/GoodNews2/18/pop1.html'},
-  {week:'7월 3주', date:'2026-07-19', title:'누군가 널 위해 기도하네', url:'https://joongangart.kr/GoodNews2/23/pop1.html'},
+  {week:'7월 3주', date:'2026-07-19', title:'누군가 널 위해 기도하네', url:'https://joongangart.kr/GoodNews2/05/pop1.html'},
   {week:'7월 4주', date:'2026-07-26', title:'비 준비하시니', url:''},
 ];
 var autoUrls = {this:'', next:''};
@@ -144,17 +144,18 @@ var autoUrls = {this:'', next:''};
   nextSunday.setDate(thisSunday.getDate() + 7);
 
   var thisWeekSong = null, nextWeekSong = null;
+  var thisMs = thisSunday.getTime();
+  var nextMs = nextSunday.getTime();
   for(var i=0;i<songData.length;i++){
     var d = new Date(songData[i].date);
-    d.setHours(0,0,0,0);
-    if(d.getTime() === thisSunday.getTime()) thisWeekSong = songData[i];
-    if(d.getTime() === nextSunday.getTime()) nextWeekSong = songData[i];
+    var dMs = d.getTime();
+    if(Math.abs(dMs - thisMs) < 86400000) thisWeekSong = songData[i];
+    if(Math.abs(dMs - nextMs) < 86400000) nextWeekSong = songData[i];
   }
-  // 못찾으면 가장 가까운 미래 곡으로
   if(!thisWeekSong){
     for(var i=0;i<songData.length;i++){
-      var d = new Date(songData[i].date); d.setHours(0,0,0,0);
-      if(d >= thisSunday){ thisWeekSong = songData[i]; break; }
+      var d = new Date(songData[i].date);
+      if(d.getTime() >= thisMs - 86400000){ thisWeekSong = songData[i]; break; }
     }
   }
   if(!nextWeekSong && thisWeekSong){
