@@ -834,10 +834,10 @@ function playAutoSong(which){
 
 <script>
 function showTab(id,el){
-  document.querySelectorAll('.content').forEach(c=>{c.classList.remove('active');c.style.removeProperty('display');});
+  document.querySelectorAll('.content').forEach(c=>{c.classList.remove('active');c.style.setProperty('display','none','important');});
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   var target = document.getElementById(id);
-  if(target){target.classList.add('active');}
+  if(target){target.classList.add('active');target.style.setProperty('display','block','important');}
   if(el&&el.classList)el.classList.add('active');
 }
 window.onload = function(){
