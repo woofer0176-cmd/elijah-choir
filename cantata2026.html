@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="성탄 칸타타">
+  <meta name="application-name" content="성탄 칸타타">
+  <meta name="theme-color" content="#040b1a">
+  <title>🎄 2026 성탄절 칸타타 연습</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&family=Noto+Serif+KR:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --gold:#ffd700; --gold-dark:#b8860b; --gold-soft:rgba(255,215,0,.15);
+      --navy-deep:#040b1a; --navy-card:rgba(8,18,45,.92);
+      --green-deep:#1b5e35; --green-mid:#246843;
+      --silver:#e8ecf5; --silver-dim:rgba(232,236,245,.55);
+      --s-color:#f9a8d4; --a-color:#c4b5fd; --t-color:#93c5fd; --b-color:#6ee7b7;
+    }
+    html { scroll-behavior:smooth; }
+    body {
+      min-height:100vh;
+      background:radial-gradient(ellipse at 50% 0%,#0e1f40 0%,#040b1a 60%);
+      font-family:'Nanum Gothic','Malgun Gothic',sans-serif;
+      color:var(--silver); overflow-x:hidden;
+    }
+
+    /* ── BACKGROUND ── */
+    #starCanvas,#snowCanvas { position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none; }
+    #starCanvas{z-index:0;} #snowCanvas{z-index:1;}
+    .bg-orb { position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0;opacity:.14; }
+    .bg-orb.gold  { width:500px;height:500px;background:#ffd700;top:-150px;left:50%;transform:translateX(-50%); }
+    .bg-orb.green { width:350px;height:350px;background:#246843;bottom:10%;left:-100px; }
+    .bg-orb.red   { width:300px;height:300px;background:#7a1212;bottom:5%;right:-80px; }
+
+    /* ── MODE BAR ── */
+    .mode-bar {
+      position:sticky;top:0;z-index:200;
+      background:rgba(4,11,26,.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+      border-bottom:1px solid rgba(255,215,0,.22);padding:10px 16px;
+      display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    }
+    .mode-label { font-size:10px;font-weight:800;color:rgba(255,215,0,.6);letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap; }
+    .mode-options { display:flex;gap:5px;flex:1; }
+    .mode-btn { flex:1;padding:8px 10px;border-radius:999px;border:1px solid rgba(255,215,0,.3);background:transparent;color:rgba(255,215,0,.55);font-size:11.5px;font-weight:700;font-family:'Nanum Gothic',sans-serif;cursor:pointer;transition:all .25s;white-space:nowrap; }
+    .mode-btn:hover { background:rgba(255,215,0,.1);color:var(--gold); }
+    .mode-btn.active { background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#000;border-color:transparent;box-shadow:0 2px 12px rgba(255,215,0,.4); }
+    .now-playing-bar { width:100%;font-size:11.5px;color:var(--gold);display:none;align-items:center;gap:6px;padding-top:4px; }
+    .now-playing-bar.visible { display:flex; }
+    .now-dot { width:7px;height:7px;border-radius:50%;background:var(--gold);animation:blink 1.2s ease-in-out infinite;flex-shrink:0; }
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+    /* ── LAYOUT ── */
+    .page-wrap { position:relative;z-index:2;max-width:860px;margin:0 auto;padding:0 14px 70px; }
+
+    /* ── HEADER ── */
+    .header { text-align:center;padding:40px 20px 30px; }
+    .header-icon { font-size:54px;display:block;margin-bottom:14px;filter:drop-shadow(0 0 20px rgba(255,215,0,.5));animation:floatTree 4s ease-in-out infinite; }
+    @keyframes floatTree{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+    .header-eyebrow { display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--green-deep),var(--green-mid));border:1px solid rgba(255,215,0,.4);border-radius:999px;padding:6px 20px;font-size:11px;font-weight:800;letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;margin-bottom:18px; }
+    .header-title { font-family:'Noto Serif KR',serif;font-size:clamp(26px,7vw,44px);font-weight:700;color:var(--gold);text-shadow:0 0 40px rgba(255,215,0,.5),0 0 80px rgba(255,215,0,.2);line-height:1.25;margin-bottom:10px; }
+    .header-sub { font-family:'Noto Serif KR',serif;font-size:14px;font-weight:300;color:var(--silver-dim);letter-spacing:3px;margin-bottom:24px; }
+    .header-rule { width:240px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:0 auto 28px;position:relative; }
+    .header-rule::before { content:'✦';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--gold);font-size:12px;background:var(--navy-deep);padding:0 8px; }
+
+    /* ── TIP BOX ── */
+    .tip-box { display:flex;gap:14px;align-items:flex-start;background:rgba(255,215,0,.07);border:1px solid rgba(255,215,0,.22);border-radius:14px;padding:16px 18px;margin-bottom:28px; }
+    .tip-icon { font-size:22px;flex-shrink:0;margin-top:1px; }
+    .tip-body { font-size:12.5px;color:rgba(255,215,0,.78);line-height:1.85; }
+    .tip-body strong { color:var(--gold); }
+
+    /* ── SONG CARD ── */
+    .song-card { background:var(--navy-card);border:1px solid rgba(255,215,0,.18);border-radius:20px;margin-bottom:28px;overflow:hidden;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 4px 24px rgba(0,0,20,.5),0 0 0 1px rgba(255,215,0,.06) inset;transition:border-color .3s,box-shadow .3s;position:relative; }
+    .song-card.playing { border-color:rgba(255,215,0,.55)!important;box-shadow:0 0 0 2px rgba(255,215,0,.25),0 8px 36px rgba(0,0,30,.6)!important; }
+    .playing-ribbon { display:none;position:absolute;top:0;right:0;background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#000;font-size:10px;font-weight:800;letter-spacing:1px;padding:4px 14px 4px 10px;border-bottom-left-radius:12px;z-index:20; }
+    .song-card.playing .playing-ribbon { display:block; }
+
+    .card-header { display:flex;align-items:center;gap:14px;padding:15px 18px;background:linear-gradient(135deg,rgba(27,94,53,.5) 0%,rgba(9,20,40,.4) 100%);border-bottom:1px solid rgba(255,215,0,.12);transition:background .3s; }
+    .song-card.playing .card-header { background:linear-gradient(135deg,rgba(40,120,60,.65) 0%,rgba(15,30,65,.5) 100%); }
+    .song-num { width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-dark));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#000;flex-shrink:0;box-shadow:0 4px 14px rgba(255,215,0,.45);position:relative; }
+    .song-num::after { content:'';position:absolute;inset:-3px;border-radius:50%;border:1px solid rgba(255,215,0,.3);animation:ringPulse 2.5s ease-in-out infinite; }
+    @keyframes ringPulse{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:.7;transform:scale(1.1)}}
+    .song-meta { flex:1;min-width:0; }
+    .song-title { font-family:'Noto Serif KR',serif;font-size:clamp(14px,4.2vw,19px);font-weight:600;color:#fff;line-height:1.3; }
+    .song-tag { font-size:11px;color:var(--silver-dim);letter-spacing:1px;margin-top:2px; }
+    .card-emoji { font-size:22px;flex-shrink:0; }
+
+    /* ── PART TAB BAR ── */
+    .part-tabs { display:flex;gap:4px;padding:10px 14px;background:rgba(0,0,0,.25);border-bottom:1px solid rgba(255,215,0,.1);overflow-x:auto;scrollbar-width:none; }
+    .part-tabs::-webkit-scrollbar { display:none; }
+    .part-tab { flex-shrink:0;padding:6px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:rgba(255,255,255,.55);font-size:11.5px;font-weight:700;font-family:'Nanum Gothic',sans-serif;cursor:pointer;transition:all .2s;white-space:nowrap; }
+    .part-tab:hover { background:rgba(255,215,0,.12);color:var(--gold);border-color:rgba(255,215,0,.3); }
+    .part-tab.active { background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#000;border-color:transparent;box-shadow:0 2px 8px rgba(255,215,0,.35); }
+
+    /* ── PLAYER AREA ── */
+    .player-wrap { position:relative;width:100%;padding-top:60%;background:#040d1e;overflow:hidden; }
+
+    /* ── 곡 6 (Jubilate): 악보 전체 보이도록 충분히 높게 ── */
+    .player-wrap.tall {
+      padding-top:0 !important;
+      height:min(82vh, 720px);
+      min-height:520px;
+      background:#f8f8f8;
+    }
+
+    /* ── Iframe 공통 ── */
+    /* 곡 1-5: vitnara 좌측 네비게이션 패널을 잘라내고 YouTube를 중앙 정렬 */
+    .player-wrap:not(.tall) iframe {
+      position:absolute;
+      top:0;
+      left:-14%;          /* 좌측 네비 패널 보정: 왼쪽으로 당기기 */
+      width:128%;         /* 컨테이너를 채우도록 너비 확장 */
+      height:110%;        /* 상단 여백 보정 */
+      border:none;
+      z-index:1;
+    }
+    /* 곡 6: tall 컨테이너를 꽉 채우기 */
+    .player-wrap.tall iframe {
+      position:absolute;top:0;left:0;width:100%;height:100%;border:none;z-index:1;
+    }
+
+    /* ── PLAY POSTER (shown before user taps play) ── */
+    .play-poster {
+      position:absolute;top:0;left:0;width:100%;height:100%;z-index:10;
+      background:linear-gradient(155deg,#0b1a38 0%,#182d56 60%,#0b1a38 100%);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      gap:14px;cursor:pointer;transition:background .3s;
+      user-select:none;-webkit-user-select:none;
+    }
+    .play-poster::before {
+      /* Subtle grid pattern */
+      content:'';position:absolute;inset:0;
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(255,215,0,.06) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(36,104,67,.12) 0%, transparent 50%);
+    }
+    .play-poster:hover { background:linear-gradient(155deg,#0d2040 0%,#1e3a6e 60%,#0d2040 100%); }
+    .play-poster.hidden { display:none; }
+
+    .poster-deco { font-size:28px;opacity:.35;letter-spacing:6px;position:relative; }
+    .play-circle {
+      width:76px;height:76px;border-radius:50%;
+      background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dark) 100%);
+      display:flex;align-items:center;justify-content:center;
+      font-size:32px;color:#000;
+      box-shadow:0 0 0 0 rgba(255,215,0,.4);
+      animation:pulsePlay 2.5s ease-in-out infinite;
+      transition:transform .2s;position:relative;
+    }
+    @keyframes pulsePlay {
+      0%,100%{ box-shadow:0 0 0 0 rgba(255,215,0,.4); }
+      50%{ box-shadow:0 0 0 16px rgba(255,215,0,0); }
+    }
+    .play-poster:hover .play-circle { transform:scale(1.08); }
+    .poster-song-title { font-family:'Noto Serif KR',serif;font-size:clamp(13px,3.5vw,17px);font-weight:600;color:rgba(255,255,255,.85);text-align:center;padding:0 20px;position:relative; }
+    .poster-hint { font-size:11px;color:rgba(255,215,0,.55);letter-spacing:2px;text-transform:uppercase;position:relative; }
+
+    /* ── PLAYLIST NAV ── */
+    .playlist-nav { display:none;align-items:center;justify-content:space-between;padding:10px 16px;background:rgba(255,215,0,.07);border-top:1px solid rgba(255,215,0,.15); }
+    .playlist-nav.visible { display:flex; }
+    .pnav-btn { padding:8px 16px;border-radius:999px;border:1px solid rgba(255,215,0,.35);background:transparent;color:var(--gold);font-size:12px;font-weight:700;font-family:'Nanum Gothic',sans-serif;cursor:pointer;transition:all .2s; }
+    .pnav-btn:hover { background:rgba(255,215,0,.15); }
+    .pnav-info { font-size:12px;color:var(--silver-dim); }
+
+    /* ── PRACTICE SECTION ── */
+    .practice-wrap { padding:16px 18px; }
+    .practice-btn { display:flex;align-items:center;gap:10px;width:100%;cursor:pointer;background:var(--gold-soft);border:1px solid rgba(255,215,0,.25);border-radius:12px;padding:12px 16px;text-align:left;transition:background .25s;user-select:none; }
+    .practice-btn:hover { background:rgba(255,215,0,.12); }
+    .practice-btn-icon { width:30px;height:30px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0; }
+    .practice-btn-label { flex:1;font-size:13px;font-weight:700;color:var(--gold); }
+    .practice-btn-arrow { font-size:11px;color:var(--gold);transition:transform .3s; }
+    .practice-btn.open .practice-btn-arrow { transform:rotate(180deg); }
+    .practice-body { display:none;padding-top:12px; }
+    .practice-body.open { display:block; }
+    .part-row { display:flex;gap:12px;margin-bottom:10px;padding:12px 15px;border-radius:12px;background:rgba(255,255,255,.03);border-left:3px solid transparent;align-items:flex-start; }
+    .part-row.s{border-left-color:var(--s-color);} .part-row.a{border-left-color:var(--a-color);} .part-row.t{border-left-color:var(--t-color);} .part-row.b{border-left-color:var(--b-color);}
+    .part-badge { flex-shrink:0;font-size:11px;font-weight:800;letter-spacing:1px;padding:4px 11px;border-radius:999px;white-space:nowrap;margin-top:1px; }
+    .part-row.s .part-badge{background:rgba(249,168,212,.2);color:var(--s-color);} .part-row.a .part-badge{background:rgba(196,181,253,.2);color:var(--a-color);} .part-row.t .part-badge{background:rgba(147,197,253,.2);color:var(--t-color);} .part-row.b .part-badge{background:rgba(110,231,183,.2);color:var(--b-color);}
+    .part-content { flex:1;font-size:13px;line-height:1.75;color:var(--silver-dim); }
+    .pending { display:inline-flex;align-items:center;gap:5px;color:rgba(255,255,255,.3);font-size:12px;border:1px dashed rgba(255,255,255,.15);border-radius:999px;padding:3px 12px;font-style:italic; }
+
+    /* ── FOOTER ── */
+    .footer { text-align:center;padding:36px 20px;color:rgba(255,255,255,.2);font-size:12px;line-height:2; }
+    .footer-stars { font-size:18px;margin-bottom:8px;letter-spacing:6px;opacity:.5; }
+
+    ::-webkit-scrollbar{width:5px;} ::-webkit-scrollbar-track{background:transparent;} ::-webkit-scrollbar-thumb{background:rgba(255,215,0,.25);border-radius:99px;}
+    @media(max-width:480px){
+      .header{padding:32px 10px 22px;}
+      .card-header{padding:12px 14px;}
+      .part-tab{font-size:10.5px;padding:5px 10px;}
+      .practice-wrap{padding:12px 14px;}
+      .play-circle{width:64px;height:64px;font-size:26px;}
+      /* 모바일에서 1-5번: 좌측 네비 보정값 유지 */
+      .player-wrap:not(.tall) iframe { left:-14%;width:128%;height:110%; }
+      /* 모바일에서 6번: 뷰포트에 맞게 */
+      .player-wrap.tall { height:75vh; min-height:420px; }
+    }
+
+    /* ── MOBILE: iframe 대신 썸네일+링크 방식 ── */
+    .desktop-player { display:block; }
+    .mobile-player  { display:none; }
+    @media (max-width: 767px) {
+      .desktop-player { display:none !important; }
+      .mobile-player  {
+        display:flex; flex-direction:column; align-items:center; justify-content:center;
+        width:100%; aspect-ratio:16/9; min-height:200px;
+        position:relative; overflow:hidden; cursor:pointer;
+        background:#040d1e;
+      }
+      .mob-thumb {
+        position:absolute; inset:0;
+        background-size:cover; background-position:center;
+        filter:brightness(.55);
+      }
+      .mob-play {
+        width:70px; height:70px; border-radius:50%;
+        background:linear-gradient(135deg,#ffd700,#b8860b);
+        display:flex; align-items:center; justify-content:center;
+        font-size:30px; color:#000; position:relative;
+        box-shadow:0 4px 24px rgba(255,215,0,.6);
+        animation:pulsePlay 2.5s ease-in-out infinite;
+      }
+      .mob-hint {
+        position:relative; margin-top:8px;
+        font-size:12px; color:rgba(255,255,255,.85);
+        letter-spacing:1px; text-shadow:0 1px 6px rgba(0,0,0,.9);
+        font-family:'Nanum Gothic',sans-serif; font-weight:700;
+      }
+      /* 모바일에서 iframe 완전히 숨기기 */
+      .player-wrap, .player-wrap.tall { display:none !important; }
+    }
+
+    @media(prefers-reduced-motion:reduce){ *,*::before,*::after{animation-duration:0s!important;transition-duration:0s!important;} }
+  </style>
+</head>
+<body>
+
+  <div class="bg-orb gold"></div>
+  <div class="bg-orb green"></div>
+  <div class="bg-orb red"></div>
+  <canvas id="starCanvas"></canvas>
+  <canvas id="snowCanvas"></canvas>
+
+  <!-- ══ MODE BAR ══ -->
+  <div class="mode-bar">
+    <span class="mode-label">재생 모드</span>
+    <div class="mode-options">
+      <button class="mode-btn active" id="btn-single"   onclick="setMode('single')">🔁 개별 반복</button>
+      <button class="mode-btn"        id="btn-playlist" onclick="setMode('playlist')">📋 전곡 순서 재생</button>
+    </div>
+    <div class="now-playing-bar" id="nowPlayingBar">
+      <span class="now-dot"></span>
+      <span>재생 중: <strong id="nowPlayingTitle">—</strong></span>
+    </div>
+  </div>
+
+  <div class="page-wrap">
+
+    <header class="header">
+      <span class="header-icon">🎄</span>
+      <div class="header-eyebrow">🎵 Cantata 2026</div>
+      <h1 class="header-title">성탄절 칸타타<br>파트 연습 가이드</h1>
+      <p class="header-sub">♪ 집중 연습 포인트 ♪</p>
+      <div class="header-rule"></div>
+    </header>
+
+    <div class="tip-box">
+      <span class="tip-icon">📌</span>
+      <div class="tip-body">
+        각 곡의 <strong>플레이어가 바로 표시</strong>됩니다. YouTube ▶를 눌러 재생하세요. 📱 <strong>모바일</strong>에서는 탭하면 비트나라가 새 탭에서 열립니다.<br>
+        <strong>파트 탭</strong>으로 전체합창 / 소프라노 / 알토 / 테너 / 베이스 / 반주를 선택할 수 있습니다.<br>
+        <strong>🔁 개별 반복</strong> 각 곡 자동 반복 &nbsp;|&nbsp; <strong>📋 전곡 순서 재생</strong> 이전·다음 버튼으로 이동<br>
+        📱 모바일에서도 정상 재생됩니다. 🎼 연습 포인트는 악보 분석 후 업데이트 예정.
+      </div>
+    </div>
+
+    <!-- ══ 곡 1 ══ -->
+    <article class="song-card" id="card-0">
+      <div class="playing-ribbon">▶ NOW PLAYING</div>
+      <div class="card-header">
+        <div class="song-num">1</div>
+        <div class="song-meta">
+          <div class="song-title">거룩한 아기가 나셨다</div>
+          <div class="song-tag">CANTATA No.1 · 비트나라 · 자동 반복</div>
+        </div>
+        <span class="card-emoji">✨</span>
+      </div>
+      <div class="part-tabs" id="tabs-0">
+        <button class="part-tab active" onclick="selectPart(0,'',this)">🎵 전체합창</button>
+        <button class="part-tab" onclick="selectPart(0,'_s',this)">👩‍🎤 소프라노</button>
+        <button class="part-tab" onclick="selectPart(0,'_a',this)">🙋‍♀️ 알토</button>
+        <button class="part-tab" onclick="selectPart(0,'_t',this)">👨‍🎤 테너</button>
+        <button class="part-tab" onclick="selectPart(0,'_b',this)">🧔‍♂️ 베이스</button>
+        <button class="part-tab" onclick="selectPart(0,'_p',this)">🎹 반주</button>
+      </div>
+      <div class="player-wrap desktop-player" id="wrap-0">
+        <iframe id="iframe-0" src="https://www.vitnara.co.kr/part/luah/luah/01.html" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen scrolling="no" title="거룩한 아기가 나셨다"></iframe>
+      </div>
+      <div class="mobile-player" onclick="openMobile(0)">
+        <div class="mob-thumb" style="background-image:url('https://img.youtube.com/vi/rTEHDm9pLCw/hqdefault.jpg')"></div>
+        <div class="mob-play">▶</div>
+        <div class="mob-hint">❄️ 탭하여 재생 (새 탭에서 열림)</div>
+      </div>
+      <div class="playlist-nav" id="pnav-0">
+        <button class="pnav-btn" onclick="navPrev(0)">◀ 이전 곡</button>
+        <span class="pnav-info">1 / 6</span>
+        <button class="pnav-btn" onclick="navNext(0)">다음 곡 ▶</button>
+      </div>
+      <div class="practice-wrap">
+        <button class="practice-btn" onclick="togglePractice(this)" aria-expanded="false">
+          <span class="practice-btn-icon">📝</span><span class="practice-btn-label">집중 연습 포인트</span><span class="practice-btn-arrow">▼</span>
+        </button>
+        <div class="practice-body">
+          <div class="part-row s"><span class="part-badge">소프라노</span><div class="part-content"><span class="pending">⏳ 악보 분석 후 추가 예정</span></div></div>
+          <div class="part-row a"><span class="part-badge">알&nbsp;&nbsp;&nbsp;토</span><div class="part-content"><span class="pending">⏳ 악보 분석 후 추가 예정</span></div></div>
+          <div class="part-row t"><span class="part-badge">테&nbsp;&nbsp;&nbsp;너</span><div class="part-content"><span class="pending">⏳ 악보 분석 후 추가 예정</span></div></div>
+          <div class="part-row b"><span class="part-badge">베이스</span><div class="part-content"><span class="pending">⏳ 악보 분석 후 추가 예정</span></div></div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══ 곡 2 ══ -->
+    <article class="song-card" id="card-1">
+      <div class="playing-ribbon">▶ NOW PLAYING</div>
+      <div class="card-header">
+        <div class="song-num">2</div>
+        <div class="song-meta">
+          <div class="song-title">동방박사 캐럴</div>
+          <div class="song-tag">CANTATA No.2 · 비트나라 · 자동 반복</div>
+        </div>
+        <span class="card-emoji">⭐</span>
+      </div>
+      <div class="part-tabs" id="tabs-1">
+        <button class="part-tab active" onclick="selectPart(1,'',this)">🎵 전체합창</button>
+        <button class="part-tab" onclick="selectPart(1,'_s',this)">👩‍🎤 소프라노</button>
+        <button class="part-tab" onclick="selectPart(1,'_a',this)">🙋‍♀️ 알토</button>
+        <button class="part-tab" onclick="selectPart(1,'_t',this)">👨‍🎤 테너</button>
+        <button class="part-tab" onclick="selectPart(1,'_b',this)">🧔‍♂️ 베이스</button>
+        <button class="part-tab" onclick="selectPart(1,'_p',this)">🎹 반주</button>
+      </div>
+      <div class="player-wrap desktop-player" id="wrap-1">
+        <iframe id="iframe-1" src="https://www.vitnara.co.kr/part/luah/luah/02.html" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen scrolling="no" title="동방박사 캐럴"></iframe>
+      </div>
+      <div class="mobile-player" onclick="openMobile(1)">
+        <div class="mob-thumb" style="background-image:url('https://img.youtube.com/vi/FiWrMcmTipw/hqdefault.jpg')"></div>
+        <div class="mob-play">▶</div>
+        <div class="mob-hint">⭐ 탭하여 재생 (새 탭에서 열림)</div>
+      </div>
+      <div class="playlist-nav" id="pnav-1">
+        <button class="pnav-btn" onclick="navPrev(1)">◀ 이전 곡</button>
+        <span class="pnav-info">2 / 6</span>
+        <button class="pnav-btn" onclick="navNext(1)">다음 곡 ▶</button>
+      </div>
+      <div class="practice-wrap">
+        <button class="practice-btn" onclick="togglePractice(this)" aria-expanded="false">
+          <span class="practice-btn-icon">📝</span><span class="practice-btn-label">집중 연습 포인트</span><span class="practice-btn-arrow">▼</span>
+        </button>
+        <div class="practice-body">
+          <div class="part-row s"><span class="part-badge">소프라노</span><div class="part-content"><span class="pending">⏳ 악보 분석 후 추가 예정</span></div></div>
+          <div class="part-row a"><span class="part-badge">알&nbsp;&nbsp;&nbsp;토</span><div class="part-content"><span class="pending">⏳ 악보 분석 후 추가 예정</span></div></div>
+          <div class="part-row t"><span class="part-badge">테&nbsp;&nbsp;&nbsp;너</span><div class="part-content"><span class="pending">⏳ 악보 분석 후 추가 예정</span></div></div>
+          <div class="part-row b"><span class="part-badge">베이스</span><div class="part-content"><span class="pending">⏳ 악보 분석 후 추가 예정</span></div></div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══ 곡 3 ══ -->
+    <article class="song-card" id="card-2">
+      <div class="playing-ribbon">▶ NOW PLAYING</div>
+      <div class="card-header">
+        <div class="song-num">3</div>
+        <div class="song-meta">
+          <div class="song-title">사랑의 왕 아기 예수</div>
+          <div class="song-tag">CANTATA No.3 · 비트나라 · 자동 반복</div>
+        </div>
+        <span class="card-emoji">🌟</span>
+      </div>
+      <div class="part-tabs" id="tabs-2">
+        <button class="part-tab active" onclick="selectPart(2,'',this)">🎵 전체합창</button>
+        <button class="part-tab" onclick="selectPart(2,'_s',this)">👩‍🎤 소프라노</button>
+        <button class="part-tab" onclick="selectPart(2,'_a',this)">🙋‍♀️ 알토</button>
+        <button class="part-tab" onclick="selectPart(2,'_t',this)">👨‍🎤 테너</button>
+        <button class="part-tab" onclick="selectPart(2,'_b',this)">🧔‍♂️ 베이스</button>
+        <button class="part-tab" onclick="selectPart(2,'_p',this)">🎹 반주</button>
+      </div>
+      <div class="player-wrap desktop-player" id="wrap-2">
+        <iframe id="iframe-2" src="https://www.vitnara.co.kr/part/luah/luah/03.html" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen scrolling="no" title="사랑의 왕 아기 예수"></iframe>
+      </div>
+      <div class="mobile-player" onclick="openMobile(2)">
+        <div class="mob-thumb" style="background-image:url('https://img.youtube.com/vi/KpMw-keZehg/hqdefault.jpg')"></div>
+        <div class="mob-play">▶</div>
+        <div class="mob-hint">🌟 탭하여 재생 (새 탭에서 열림)</div>
+      </div>
+      <div class="playlist-nav" id="pnav-2">
+        <button class="pnav-btn" onclick="navPrev(2)">◀ 이전 곡</button>
+        <span class="pnav-info">3 / 6</span>
+        <button class="pnav-btn" onclick="navNext(2)">다음 곡 ▶</button>
+      </div>
+      <div class="practice-wrap">
+        <button class="practice-btn" onclick="togglePractice(this)" aria-expanded="false">
+          <span class="practice-btn-icon">📝</span><span class="practice-btn-label">집중 연습 포인트</span><span class="practice-btn-arrow">▼</span>
+        </button>
+        <div class="practice-body">
+          <div class="part-row s"><span class="part-badge">소프라노</span><div class="part-content"><span class="pending">⏳ 악보 분석 후 추가 예정</span></div></div>
+          <div class="part-row a"><span class="part-badge">알&nbsp;&nbsp;&nbsp;토</span><div class="part-content"><span class="pending">⏳ 악보 분석 후 추가 예정</span></div></div>
+          <div class="part-row t"><span class="part-badge">테&nbsp;&nbsp;&nbsp;너</span><div class="part-content"><span class="pending">⏳ 악보 분석 후 추가 예정</span></div></div>
+          <div class="part-row b"><span class="part-badge">베이스</span><div class="part-content"><span class="pending">⏳ 악보 분석 후 추가 예정</span></div></div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══ 곡 4 ══ -->
+    <article class="song-card" id="card-3">
+      <div class="playing-ribbon">▶ NOW PLAYING</div>
+      <div class="card-header">
+        <div class="song-num">4</div>
+        <div class="song-meta">
+          <div class="song-title">높은 곳에 영광</div>
+          <div class="song-tag">CANTATA No.4 · 비트나라 · 자동 반복</div>
+        </div>
+        <span class="card-emoji">🎺</span>
+      </div>
+      <div class="part-tabs" id="tabs-3">
+        <button class="part-tab active" onclick="selectPart(3,'',this)">🎵 전체합창</button>
+        <button class="part-tab" onclick="selectPart(3,'_s',this)">👩‍🎤 소프라노</button>
+        <button class="part-tab" onclick="selectPart(3,'_a',this)">🙋‍♀️ 알토</button>
+        <button class="part-tab" onclick="selectPart(3,'_t',this)">👨‍🎤 테너</button>
+        <button class="part-tab" onclick="selectPart(3,'_b',this)">🧔‍♂️ 베이스</button>
+        <button class="part-tab" onclick="selectPart(3,'_p',this)">🎹 반주</button>
+      </div>
+      <div class="player-wrap desktop-player" id="wrap-3">
+        <iframe id="iframe-3" src="https://www.vitnara.co.kr/part/luah/luah/04.html" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen scrolling="no" title="높은 곳에 영광"></iframe>
+      </div>
+      <div class="mobile-player" onclick="openMobile(3)">
+        <div class="mob-thumb" style="background-image:url('https://img.youtube.com/vi/-MhQ1RCu-oU/hqdefault.jpg')"></div>
+        <div class="mob-play">▶</div>
+        <div class="mob-hint">🎺 탭하여 재생 (새 탭에서 열림)</div>
+      </div>
+      <div class="playlist-nav" id="pnav-3">
+        <button class="pnav-btn" onclick="navPrev(3)">◀ 이전 곡</button>
+        <span class="pnav-info">4 / 6</span>
+        <button class="pnav-btn" onclick="navNext(3)">다음 곡 ▶</button>
+      </div>
+      <div class="practice-wrap">
+        <button class="practice-btn" onclick="togglePractice(this)" aria-expanded="false">
+          <span class="practice-btn-icon">📝</span><span class="practice-btn-label">집중 연습 포인트</span><span class="practice-btn-arrow">▼</span>
+        </button>
+        <div class="practice-body">
+          <div class="part-row s"><span class="part-badge">소프라노</span><div class="part-content"><span class="pending">⏳ 악보 분석 후 추가 예정</span></div></div>
+          <div class="part-row a"><span class="part-badge">알&nbsp;&nbsp;&nbsp;토</span><div class="part-content"><span class="pending">⏳ 악보 분석 후 추가 예정</span></div></div>
+          <div class="part-row t"><span class="part-badge">테&nbsp;&nbsp;&nbsp;너</span><div class="part-content"><span class="pending">⏳ 악보 분석 후 추가 예정</span></div></div>
+          <div class="part-row b"><span class="part-badge">베이스</span><div class="part-content"><span class="pending">⏳ 악보 분석 후 추가 예정</span></div></div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══ 곡 5 ══ -->
+    <article class="song-card" id="card-4">
+      <div class="playing-ribbon">▶ NOW PLAYING</div>
+      <div class="card-header">
+        <div class="song-num">5</div>
+        <div class="song-meta">
+          <div class="song-title">Happy Birthday Jesus</div>
+          <div class="song-tag">CANTATA No.5 · 비트나라 · 자동 반복</div>
+        </div>
+        <span class="card-emoji">🎂</span>
+      </div>
+      <div class="part-tabs" id="tabs-4">
+        <button class="part-tab active" onclick="selectPart(4,'',this)">🎵 전체합창</button>
+        <button class="part-tab" onclick="selectPart(4,'_s',this)">👩‍🎤 소프라노</button>
+        <button class="part-tab" onclick="selectPart(4,'_a',this)">🙋‍♀️ 알토</button>
+        <button class="part-tab" onclick="selectPart(4,'_t',this)">👨‍🎤 테너</button>
+        <button class="part-tab" onclick="selectPart(4,'_b',this)">🧔‍♂️ 베이스</button>
+        <button class="part-tab" onclick="selectPart(4,'_p',this)">🎹 반주</button>
+      </div>
+      <div class="player-wrap desktop-player" id="wrap-4">
+        <iframe id="iframe-4" src="https://www.vitnara.co.kr/part/luah/luah/05.html" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen scrolling="no" title="Happy Birthday Jesus"></iframe>
+      </div>
+      <div class="mobile-player" onclick="openMobile(4)">
+        <div class="mob-thumb" style="background-image:url('https://img.youtube.com/vi/kL1TJCZENfE/hqdefault.jpg')"></div>
+        <div class="mob-play">▶</div>
+        <div class="mob-hint">🎂 탭하여 재생 (새 탭에서 열림)</div>
+      </div>
+      <div class="playlist-nav" id="pnav-4">
+        <button class="pnav-btn" onclick="navPrev(4)">◀ 이전 곡</button>
+        <span class="pnav-info">5 / 6</span>
+        <button class="pnav-btn" onclick="navNext(4)">다음 곡 ▶</button>
+      </div>
+      <div class="practice-wrap">
+        <button class="practice-btn" onclick="togglePractice(this)" aria-expanded="false">
+          <span class="practice-btn-icon">📝</span><span class="practice-btn-label">집중 연습 포인트</span><span class="practice-btn-arrow">▼</span>
+        </button>
+        <div class="practice-body">
+          <div class="part-row s"><span class="part-badge">소프라노</span><div class="part-content"><span class="pending">⏳ 악보 분석 후 추가 예정</span></div></div>
+          <div class="part-row a"><span class="part-badge">알&nbsp;&nbsp;&nbsp;토</span><div class="part-content"><span class="pending">⏳ 악보 분석 후 추가 예정</span></div></div>
+          <div class="part-row t"><span class="part-badge">테&nbsp;&nbsp;&nbsp;너</span><div class="part-content"><span class="pending">⏳ 악보 분석 후 추가 예정</span></div></div>
+          <div class="part-row b"><span class="part-badge">베이스</span><div class="part-content"><span class="pending">⏳ 악보 분석 후 추가 예정</span></div></div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══ 곡 6 (Jubilate) ══ -->
+    <article class="song-card" id="card-5">
+      <div class="card-header">
+        <div class="song-num">6</div>
+        <div class="song-meta">
+          <div class="song-title">평화의 왕 오셨다</div>
+          <div class="song-tag">CANTATA No.6 · Jubilate 제공</div>
+        </div>
+        <span class="card-emoji">🕊️</span>
+      </div>
+      <div class="part-tabs" id="tabs-5">
+        <button class="part-tab active" onclick="selectJubilatePart('c',this)">🎵 전체합창</button>
+        <button class="part-tab" onclick="selectJubilatePart('s',this)">👩‍🎤 소프라노</button>
+        <button class="part-tab" onclick="selectJubilatePart('a',this)">🙋‍♀️ 알토</button>
+        <button class="part-tab" onclick="selectJubilatePart('t',this)">👨‍🎤 테너</button>
+        <button class="part-tab" onclick="selectJubilatePart('b',this)">🧔‍♂️ 베이스</button>
+      </div>
+      <div class="player-wrap tall desktop-player" id="wrap-5">
+        <!-- jubilate 페이지 자동재생 방지: 클릭 시 로드 -->
+        <div id="song6-cover" style="
+          position:absolute;top:0;left:0;width:100%;height:100%;z-index:10;
+          background:linear-gradient(145deg,#071828 0%,#0d2d4a 45%,#071828 100%);
+          display:flex;flex-direction:column;align-items:center;justify-content:center;
+          gap:16px;cursor:pointer;
+          background-image:
+            radial-gradient(ellipse at 30% 20%, rgba(255,215,0,.08) 0%, transparent 55%),
+            radial-gradient(ellipse at 70% 80%, rgba(27,94,53,.15) 0%, transparent 55%);
+        " onclick="playSong6()">
+          <div style="font-size:52px;filter:drop-shadow(0 0 18px rgba(255,255,255,.4));animation:floatTree 4s ease-in-out infinite;">🕊️</div>
+          <div style="font-family:'Noto Serif KR',serif;font-size:clamp(16px,4vw,22px);font-weight:700;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.6);">평화의 왕 오셨다</div>
+          <div style="
+            width:72px;height:72px;border-radius:50%;
+            background:linear-gradient(135deg,#ffd700,#b8860b);
+            display:flex;align-items:center;justify-content:center;
+            font-size:30px;color:#000;
+            box-shadow:0 0 0 0 rgba(255,215,0,.4);
+            animation:pulsePlay 2.5s ease-in-out infinite;
+          ">▶</div>
+          <div style="font-size:12px;color:rgba(255,215,0,.65);letter-spacing:2px;font-family:'Nanum Gothic',sans-serif;font-weight:700;">클릭하여 재생</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.3);letter-spacing:1px;">CANTATA No.6 · Jubilate</div>
+        </div>
+        <iframe id="iframe-5" src="" allow="autoplay; encrypted-media; picture-in-picture" scrolling="yes" title="평화의 왕 오셨다"></iframe>
+      </div>
+      <div class="mobile-player" onclick="openMobile(5)">
+        <div class="mob-thumb" style="background:linear-gradient(135deg,#0d2040,#1b4060)"></div>
+        <div class="mob-play">▶</div>
+        <div class="mob-hint">🕊️ 탭하여 재생 (새 탭에서 열림)</div>
+      </div>
+      <div class="playlist-nav" id="pnav-5">
+        <button class="pnav-btn" onclick="navPrev(5)">◀ 이전 곡</button>
+        <span class="pnav-info">6 / 6</span>
+        <button class="pnav-btn" onclick="navNext(5)">처음으로 ↩</button>
+      </div>
+      <div class="practice-wrap">
+        <button class="practice-btn" onclick="togglePractice(this)" aria-expanded="false">
+          <span class="practice-btn-icon">📝</span><span class="practice-btn-label">집중 연습 포인트</span><span class="practice-btn-arrow">▼</span>
+        </button>
+        <div class="practice-body">
+          <div class="part-row s"><span class="part-badge">소프라노</span><div class="part-content"><span class="pending">⏳ 악보 분석 후 추가 예정</span></div></div>
+          <div class="part-row a"><span class="part-badge">알&nbsp;&nbsp;&nbsp;토</span><div class="part-content"><span class="pending">⏳ 악보 분석 후 추가 예정</span></div></div>
+          <div class="part-row t"><span class="part-badge">테&nbsp;&nbsp;&nbsp;너</span><div class="part-content"><span class="pending">⏳ 악보 분석 후 추가 예정</span></div></div>
+          <div class="part-row b"><span class="part-badge">베이스</span><div class="part-content"><span class="pending">⏳ 악보 분석 후 추가 예정</span></div></div>
+        </div>
+      </div>
+    </article>
+
+    <footer class="footer">
+      <div class="footer-stars">★ ★ ★ ★ ★</div>
+      🎄 2026 성탄절 칸타타 파트 연습 가이드 🎄<br>
+      비트나라 제공 음원 · 악보 분석 후 집중 연습 포인트 순차 업데이트<br>
+      <span style="font-size:11px;opacity:.5;">Prepared for Choir Practice · Christmas 2026</span>
+    </footer>
+  </div>
+
+  <script>
+  /* ════ STARS ════ */
+  (function(){
+    const c=document.getElementById('starCanvas'),ctx=c.getContext('2d');let s=[];
+    function resize(){c.width=window.innerWidth;c.height=window.innerHeight;s=[];const n=Math.floor((c.width*c.height)/8000);for(let i=0;i<n;i++)s.push({x:Math.random()*c.width,y:Math.random()*c.height*.65,r:Math.random()*1.8+.3,base:Math.random()*.55+.15,speed:Math.random()*.8+.4,phase:Math.random()*Math.PI*2});}
+    let t=0;function draw(){ctx.clearRect(0,0,c.width,c.height);t+=.012;s.forEach(st=>{const a=st.base+Math.sin(t*st.speed+st.phase)*(st.base*.5);ctx.beginPath();ctx.arc(st.x,st.y,st.r,0,Math.PI*2);ctx.fillStyle=`rgba(255,245,200,${a})`;ctx.fill();});requestAnimationFrame(draw);}
+    window.addEventListener('resize',resize);resize();draw();
+  })();
+
+  /* ════ SNOW ════ */
+  (function(){
+    const c=document.getElementById('snowCanvas'),ctx=c.getContext('2d');let f=[];
+    function resize(){c.width=window.innerWidth;c.height=window.innerHeight;}
+    function mk(ry){return{x:Math.random()*c.width,y:ry?Math.random()*c.height:-8,r:Math.random()*2.8+.8,speed:Math.random()*1+.4,opacity:Math.random()*.5+.1,swing:(Math.random()-.5)*.5,phase:Math.random()*Math.PI*2,ps:(Math.random()-.5)*.04};}
+    for(let i=0;i<140;i++)f.push(mk(true));
+    function draw(){ctx.clearRect(0,0,c.width,c.height);f.forEach(fl=>{fl.phase+=fl.ps;fl.y+=fl.speed;fl.x+=Math.sin(fl.phase)*fl.swing;if(fl.y>c.height+10)Object.assign(fl,mk(false));if(fl.x<-10)fl.x=c.width+10;if(fl.x>c.width+10)fl.x=-10;ctx.beginPath();ctx.arc(fl.x,fl.y,fl.r,0,Math.PI*2);ctx.fillStyle=`rgba(220,235,255,${fl.opacity})`;ctx.fill();});requestAnimationFrame(draw);}
+    window.addEventListener('resize',resize);resize();draw();
+  })();
+
+  /* ════ SONG DATA ════ */
+  const BASES  = [
+    'https://www.vitnara.co.kr/part/luah/luah/01',
+    'https://www.vitnara.co.kr/part/luah/luah/02',
+    'https://www.vitnara.co.kr/part/luah/luah/03',
+    'https://www.vitnara.co.kr/part/luah/luah/04',
+    'https://www.vitnara.co.kr/part/luah/luah/05'
+  ];
+  const TITLES = ['거룩한 아기가 나셨다','동방박사 캐럴','사랑의 왕 아기 예수','높은 곳에 영광','Happy Birthday Jesus','평화의 왕 오셨다'];
+  const TOTAL  = 6;
+
+  let activeSuffix = ['','','','',''];  // 각 곡의 현재 파트 suffix (1-5번)
+  let jubilaPart   = 'c';              // 6번 jubilate 현재 파트
+
+  /* ════ 파트 선택 (곡 1-5, vitnara) ════ */
+  function selectPart(songIdx, suffix, btn) {
+    activeSuffix[songIdx] = suffix;
+    if (isMobile()) {
+      window.open(BASES[songIdx] + suffix + '.html', '_blank');
+    } else {
+      document.getElementById('iframe-' + songIdx).src = BASES[songIdx] + suffix + '.html';
+    }
+    updateTabs(songIdx, btn);
+    setPlaying(songIdx);
+  }
+
+  /* ════ 파트 선택 (곡 6, Jubilate) ════ */
+  function playSong6(part) {
+    jubilaPart = part || jubilaPart || 'c';
+    const cover = document.getElementById('song6-cover');
+    if (cover) cover.style.display = 'none';
+    document.getElementById('iframe-5').src =
+      'https://jubil2018.cafe24.com/can/path/online_pt/7/' + jubilaPart + '.htm';
+    setPlaying(5);
+  }
+  function selectJubilatePart(part, btn) {
+    jubilaPart = part;
+    const url = 'https://jubil2018.cafe24.com/can/path/online_pt/7/' + part + '.htm';
+    if (isMobile()) {
+      window.open(url, '_blank');
+    } else {
+      playSong6(part);
+    }
+    updateTabs(5, btn);
+  }
+
+  /* ════ 모바일 전용: 비트나라 새 탭 열기 ════ */
+  const YT_IDS = ['rTEHDm9pLCw','FiWrMcmTipw','KpMw-keZehg','-MhQ1RCu-oU','kL1TJCZENfE'];
+  function openMobile(songIdx) {
+    let url;
+    if (songIdx === 5) {
+      url = 'https://jubil2018.cafe24.com/can/path/online_pt/7/' + (jubilaPart || 'c') + '.htm';
+    } else {
+      url = BASES[songIdx] + (activeSuffix[songIdx] || '') + '.html';
+    }
+    window.open(url, '_blank');
+    setPlaying(songIdx);
+  }
+
+  function isMobile() {
+    return window.innerWidth < 768 || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  }
+
+  /* ════ 탭 활성화 상태 업데이트 ════ */
+  function updateTabs(songIdx, activeBtn) {
+    document.querySelectorAll('#tabs-' + songIdx + ' .part-tab')
+      .forEach(t => t.classList.remove('active'));
+    if (activeBtn) activeBtn.classList.add('active');
+  }
+
+  /* ════ 현재 재생 중 카드 강조 ════ */
+  function setPlaying(idx) {
+    document.querySelectorAll('.song-card')
+      .forEach((card, i) => card.classList.toggle('playing', i === idx));
+    document.getElementById('nowPlayingTitle').textContent = TITLES[idx] || '—';
+  }
+
+  /* ════ 재생 모드 전환 ════ */
+  let playMode = 'single';
+  function setMode(mode) {
+    playMode = mode;
+    document.getElementById('btn-single').classList.toggle('active',    mode === 'single');
+    document.getElementById('btn-playlist').classList.toggle('active',  mode === 'playlist');
+    document.getElementById('nowPlayingBar').classList.toggle('visible', mode === 'playlist');
+    for (let i = 0; i < TOTAL; i++) {
+      const pn = document.getElementById('pnav-' + i);
+      if (pn) pn.classList.toggle('visible', mode === 'playlist');
+    }
+    // 전곡 순서 재생 전환 시 → 1번 곡으로 이동 & 강조
+    if (mode === 'playlist') {
+      setPlaying(0);
+      scrollToCard(0);
+    }
+  }
+
+  /* ════ 전곡 재생 모드: 이전/다음 곡 이동 ════ */
+  function navNext(idx) {
+    const next = (idx + 1) % TOTAL;
+    scrollToCard(next);
+    setPlaying(next);
+  }
+  function navPrev(idx) {
+    const prev = (idx - 1 + TOTAL) % TOTAL;
+    scrollToCard(prev);
+    setPlaying(prev);
+  }
+  function scrollToCard(idx) {
+    const el = document.getElementById('card-' + idx);
+    if (el) el.scrollIntoView({ behavior:'smooth', block:'center' });
+  }
+
+  /* ════ 집중 연습 포인트 토글 ════ */
+  function togglePractice(btn) {
+    const open = btn.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(open));
+    btn.nextElementSibling.classList.toggle('open', open);
+  }
+  </script>
+
+</body>
+</html>
