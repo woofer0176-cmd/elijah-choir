@@ -109,16 +109,26 @@
 
     /* ── Iframe 공통 ── */
     /* 곡 1-5: vitnara 좌측 네비게이션 패널을 잘라내고 YouTube를 중앙 정렬 */
-    /* Songs 1-5 iframe: YouTube 직접 embed - 보정 불필요 */
+    /* Songs 1-5 iframe: vitnara 좌측 네비 패널 보정 (PC용) */
     .player-wrap:not(.tall) iframe {
       position:absolute;
-      top:0; left:0;
-      width:100%; height:100%;
+      top:0; left:-14%;
+      width:128%; height:110%;
       border:none; z-index:1;
     }
-    /* 곡 6: tall 컨테이너를 꽉 채우기 */
+    /* ── 곡 6 (Jubilate): 악보+플레이어 전체 보이도록 ── */
+    .player-wrap.tall {
+      padding-top:0 !important;
+      height: min(88vh, 900px);
+      min-height: 600px;
+      background:#f5f5f5;
+      overflow: auto;           /* hidden → auto: 스크롤 허용 */
+      -webkit-overflow-scrolling: touch; /* iOS 부드러운 스크롤 */
+    }
     .player-wrap.tall iframe {
-      position:absolute;top:0;left:0;width:100%;height:100%;border:none;z-index:1;
+      position:absolute; top:0; left:0;
+      width:100%; height:200%;  /* 컨테이너보다 2배 높게 → 내용 모두 표시 */
+      border:none; z-index:1;
     }
 
     /* ── PLAY POSTER (shown before user taps play) ── */
@@ -198,8 +208,21 @@
       .player-wrap.tall { height:75vh; min-height:420px; }
     }
 
-    /* mobile-player 요소 숨김 (HTTPS 호스팅 이후 불필요) */
-    .mobile-player { display:none !important; }
+
+    /* ── 모바일 전용 오버레이 (vitnara 중첩 iframe 불가 → 새탭 유도) ── */
+    .mob-overlay { display:none; }
+    @media (hover:none) and (pointer:coarse) {
+      .mob-overlay {
+        display:flex; flex-direction:column; align-items:center; justify-content:center;
+        position:absolute; top:0; left:0; width:100%; height:100%; z-index:20;
+        background:linear-gradient(155deg,#0b1a38 0%,#182d56 60%,#0b1a38 100%);
+        gap:12px; cursor:pointer;
+      }
+      .mob-play { width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,#ffd700,#b8860b);display:flex;align-items:center;justify-content:center;font-size:28px;color:#000;box-shadow:0 4px 24px rgba(255,215,0,.5);animation:pulsePlay 2.5s ease-in-out infinite; }
+      .mob-hint1 { font-family:'Noto Serif KR',serif;font-size:clamp(13px,3.5vw,17px);color:#fff;font-weight:600;text-align:center; }
+      .mob-hint2 { font-size:11px;color:rgba(255,215,0,.6);letter-spacing:1.5px;text-transform:uppercase;font-family:'Nanum Gothic',sans-serif; }
+    }
+
 
     @media(prefers-reduced-motion:reduce){ *,*::before,*::after{animation-duration:0s!important;transition-duration:0s!important;} }
   </style>
@@ -238,7 +261,7 @@
     <div class="tip-box">
       <span class="tip-icon">📌</span>
       <div class="tip-body">
-        각 곡의 <strong>플레이어가 바로 표시</strong>됩니다. YouTube ▶를 눌러 재생하세요. 📱 모바일에서 <strong>전체합창</strong>은 화면 안에서 바로 재생, 파트는 새 탭에서 열립니다.<br>
+        각 곡의 <strong>플레이어가 바로 표시</strong>됩니다. YouTube ▶를 눌러 재생하세요. 📱 <strong>모바일</strong>: ▶ 탭 → 비트나라 새 탭에서 재생 | 💻 <strong>PC</strong>: 화면 안에서 바로 재생<br>
         <strong>파트 탭</strong>으로 전체합창 / 소프라노 / 알토 / 테너 / 베이스 / 반주를 선택할 수 있습니다.<br>
         <strong>🔁 개별 반복</strong> 각 곡 자동 반복 &nbsp;|&nbsp; <strong>📋 전곡 순서 재생</strong> 이전·다음 버튼으로 이동<br>
         📱 모바일에서도 정상 재생됩니다. 🎼 연습 포인트는 악보 분석 후 업데이트 예정.
@@ -265,12 +288,17 @@
         <button class="part-tab" onclick="selectPart(0,'_p',this)">🎹 반주</button>
       </div>
       <div class="player-wrap desktop-player" id="wrap-0">
-        <iframe id="iframe-0" src="https://www.youtube-nocookie.com/embed/rTEHDm9pLCw?rel=0&playsinline=1&modestbranding=1&fs=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen title="거룩한 아기가 나셨다"></iframe>
+        <iframe id="iframe-0" src="https://www.vitnara.co.kr/part/luah/luah/01.html" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen scrolling="no" title="거룩한 아기가 나셨다"></iframe>
       </div>
       <div class="mobile-player" onclick="openMobile(0)">
         <div class="mob-thumb" style="background-image:url('https://img.youtube.com/vi/rTEHDm9pLCw/hqdefault.jpg')"></div>
         <div class="mob-play">▶</div>
         <div class="mob-hint">❄️ 탭하여 재생 (새 탭에서 열림)</div>
+      </div>
+      <div class="mob-overlay" id="mob-0" onclick="openVitnara(0)">
+        <div class="mob-play">▶</div>
+        <div class="mob-hint1">❄️ 거룩한 아기가 나셨다</div>
+        <div class="mob-hint2">탭하여 비트나라에서 재생</div>
       </div>
       <div class="playlist-nav" id="pnav-0">
         <button class="pnav-btn" onclick="navPrev(0)">◀ 이전 곡</button>
@@ -310,12 +338,17 @@
         <button class="part-tab" onclick="selectPart(1,'_p',this)">🎹 반주</button>
       </div>
       <div class="player-wrap desktop-player" id="wrap-1">
-        <iframe id="iframe-1" src="https://www.youtube-nocookie.com/embed/FiWrMcmTipw?rel=0&playsinline=1&modestbranding=1&fs=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen title="동방박사 캐럴"></iframe>
+        <iframe id="iframe-1" src="https://www.vitnara.co.kr/part/luah/luah/02.html" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen scrolling="no" title="동방박사 캐럴"></iframe>
       </div>
       <div class="mobile-player" onclick="openMobile(1)">
         <div class="mob-thumb" style="background-image:url('https://img.youtube.com/vi/FiWrMcmTipw/hqdefault.jpg')"></div>
         <div class="mob-play">▶</div>
         <div class="mob-hint">⭐ 탭하여 재생 (새 탭에서 열림)</div>
+      </div>
+      <div class="mob-overlay" id="mob-1" onclick="openVitnara(1)">
+        <div class="mob-play">▶</div>
+        <div class="mob-hint1">⭐ 동방박사 캐럴</div>
+        <div class="mob-hint2">탭하여 비트나라에서 재생</div>
       </div>
       <div class="playlist-nav" id="pnav-1">
         <button class="pnav-btn" onclick="navPrev(1)">◀ 이전 곡</button>
@@ -355,12 +388,17 @@
         <button class="part-tab" onclick="selectPart(2,'_p',this)">🎹 반주</button>
       </div>
       <div class="player-wrap desktop-player" id="wrap-2">
-        <iframe id="iframe-2" src="https://www.youtube-nocookie.com/embed/KpMw-keZehg?rel=0&playsinline=1&modestbranding=1&fs=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen title="사랑의 왕 아기 예수"></iframe>
+        <iframe id="iframe-2" src="https://www.vitnara.co.kr/part/luah/luah/03.html" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen scrolling="no" title="사랑의 왕 아기 예수"></iframe>
       </div>
       <div class="mobile-player" onclick="openMobile(2)">
         <div class="mob-thumb" style="background-image:url('https://img.youtube.com/vi/KpMw-keZehg/hqdefault.jpg')"></div>
         <div class="mob-play">▶</div>
         <div class="mob-hint">🌟 탭하여 재생 (새 탭에서 열림)</div>
+      </div>
+      <div class="mob-overlay" id="mob-2" onclick="openVitnara(2)">
+        <div class="mob-play">▶</div>
+        <div class="mob-hint1">🌟 사랑의 왕 아기 예수</div>
+        <div class="mob-hint2">탭하여 비트나라에서 재생</div>
       </div>
       <div class="playlist-nav" id="pnav-2">
         <button class="pnav-btn" onclick="navPrev(2)">◀ 이전 곡</button>
@@ -400,12 +438,17 @@
         <button class="part-tab" onclick="selectPart(3,'_p',this)">🎹 반주</button>
       </div>
       <div class="player-wrap desktop-player" id="wrap-3">
-        <iframe id="iframe-3" src="https://www.youtube-nocookie.com/embed/-MhQ1RCu-oU?rel=0&playsinline=1&modestbranding=1&fs=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen title="높은 곳에 영광"></iframe>
+        <iframe id="iframe-3" src="https://www.vitnara.co.kr/part/luah/luah/04.html" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen scrolling="no" title="높은 곳에 영광"></iframe>
       </div>
       <div class="mobile-player" onclick="openMobile(3)">
         <div class="mob-thumb" style="background-image:url('https://img.youtube.com/vi/-MhQ1RCu-oU/hqdefault.jpg')"></div>
         <div class="mob-play">▶</div>
         <div class="mob-hint">🎺 탭하여 재생 (새 탭에서 열림)</div>
+      </div>
+      <div class="mob-overlay" id="mob-3" onclick="openVitnara(3)">
+        <div class="mob-play">▶</div>
+        <div class="mob-hint1">🎺 높은 곳에 영광</div>
+        <div class="mob-hint2">탭하여 비트나라에서 재생</div>
       </div>
       <div class="playlist-nav" id="pnav-3">
         <button class="pnav-btn" onclick="navPrev(3)">◀ 이전 곡</button>
@@ -445,12 +488,17 @@
         <button class="part-tab" onclick="selectPart(4,'_p',this)">🎹 반주</button>
       </div>
       <div class="player-wrap desktop-player" id="wrap-4">
-        <iframe id="iframe-4" src="https://www.youtube-nocookie.com/embed/kL1TJCZENfE?rel=0&playsinline=1&modestbranding=1&fs=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen title="Happy Birthday Jesus"></iframe>
+        <iframe id="iframe-4" src="https://www.vitnara.co.kr/part/luah/luah/05.html" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen scrolling="no" title="Happy Birthday Jesus"></iframe>
       </div>
       <div class="mobile-player" onclick="openMobile(4)">
         <div class="mob-thumb" style="background-image:url('https://img.youtube.com/vi/kL1TJCZENfE/hqdefault.jpg')"></div>
         <div class="mob-play">▶</div>
         <div class="mob-hint">🎂 탭하여 재생 (새 탭에서 열림)</div>
+      </div>
+      <div class="mob-overlay" id="mob-4" onclick="openVitnara(4)">
+        <div class="mob-play">▶</div>
+        <div class="mob-hint1">🎂 Happy Birthday Jesus</div>
+        <div class="mob-hint2">탭하여 비트나라에서 재생</div>
       </div>
       <div class="playlist-nav" id="pnav-4">
         <button class="pnav-btn" onclick="navPrev(4)">◀ 이전 곡</button>
@@ -578,25 +626,25 @@
   let jubilaPart   = 'c';              // 6번 jubilate 현재 파트
 
   /* ════ 파트 선택 (곡 1-5) ════ */
-  const YT_IDS = ['rTEHDm9pLCw','FiWrMcmTipw','KpMw-keZehg','-MhQ1RCu-oU','kL1TJCZENfE'];
+  function isMobile() {
+    return window.matchMedia('(hover:none) and (pointer:coarse)').matches;
+  }
+
+  function openVitnara(songIdx) {
+    // 모바일: 비트나라 새 탭으로 열기
+    const suffix = activeSuffix[songIdx] || '';
+    window.open(BASES[songIdx] + suffix + '.html', '_blank');
+    setPlaying(songIdx);
+  }
 
   function selectPart(songIdx, suffix, btn) {
     activeSuffix[songIdx] = suffix;
-    const iframe = document.getElementById('iframe-' + songIdx);
-
-    if (suffix === '') {
-      // 전체합창 → YouTube 직접 embed (모바일 포함 전체 작동)
-      iframe.src = 'https://www.youtube-nocookie.com/embed/' + YT_IDS[songIdx]
-        + '?rel=0&playsinline=1&modestbranding=1&fs=1';
+    if (isMobile()) {
+      // 모바일: 비트나라 새 탭 (vitnara 중첩iframe이 모바일에서 차단됨)
+      window.open(BASES[songIdx] + suffix + '.html', '_blank');
     } else {
-      // 파트 선택 → 모바일: 새탭, 데스크탑: iframe
-      const vitnaraUrl = BASES[songIdx] + suffix + '.html';
-      const isMob = /iPhone|iPad|Android|Mobile/i.test(navigator.userAgent);
-      if (isMob) {
-        window.open(vitnaraUrl, '_blank');
-      } else {
-        iframe.src = vitnaraUrl;
-      }
+      // PC: vitnara iframe으로 로드
+      document.getElementById('iframe-' + songIdx).src = BASES[songIdx] + suffix + '.html';
     }
     updateTabs(songIdx, btn);
     setPlaying(songIdx);
@@ -613,7 +661,11 @@
   }
   function selectJubilatePart(part, btn) {
     jubilaPart = part;
-    playSong6(part);
+    if (isMobile()) {
+      window.open('https://jubil2018.cafe24.com/can/path/online_pt/7/' + part + '.htm', '_blank');
+    } else {
+      playSong6(part);
+    }
     updateTabs(5, btn);
   }
 
