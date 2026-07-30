@@ -265,7 +265,7 @@
         <button class="part-tab" onclick="selectPart(0,'_p',this)">🎹 반주</button>
       </div>
       <div class="player-wrap desktop-player" id="wrap-0">
-        <iframe id="iframe-0" src="https://www.youtube.com/embed/rTEHDm9pLCw?rel=0&playsinline=1&modestbranding=1" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen scrolling="no" title="거룩한 아기가 나셨다"></iframe>
+        <iframe id="iframe-0" src="https://www.youtube-nocookie.com/embed/rTEHDm9pLCw?rel=0&playsinline=1&modestbranding=1&fs=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen title="거룩한 아기가 나셨다"></iframe>
       </div>
       <div class="mobile-player" onclick="openMobile(0)">
         <div class="mob-thumb" style="background-image:url('https://img.youtube.com/vi/rTEHDm9pLCw/hqdefault.jpg')"></div>
@@ -310,7 +310,7 @@
         <button class="part-tab" onclick="selectPart(1,'_p',this)">🎹 반주</button>
       </div>
       <div class="player-wrap desktop-player" id="wrap-1">
-        <iframe id="iframe-1" src="https://www.youtube.com/embed/FiWrMcmTipw?rel=0&playsinline=1&modestbranding=1" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen scrolling="no" title="동방박사 캐럴"></iframe>
+        <iframe id="iframe-1" src="https://www.youtube-nocookie.com/embed/FiWrMcmTipw?rel=0&playsinline=1&modestbranding=1&fs=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen title="동방박사 캐럴"></iframe>
       </div>
       <div class="mobile-player" onclick="openMobile(1)">
         <div class="mob-thumb" style="background-image:url('https://img.youtube.com/vi/FiWrMcmTipw/hqdefault.jpg')"></div>
@@ -355,7 +355,7 @@
         <button class="part-tab" onclick="selectPart(2,'_p',this)">🎹 반주</button>
       </div>
       <div class="player-wrap desktop-player" id="wrap-2">
-        <iframe id="iframe-2" src="https://www.youtube.com/embed/KpMw-keZehg?rel=0&playsinline=1&modestbranding=1" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen scrolling="no" title="사랑의 왕 아기 예수"></iframe>
+        <iframe id="iframe-2" src="https://www.youtube-nocookie.com/embed/KpMw-keZehg?rel=0&playsinline=1&modestbranding=1&fs=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen title="사랑의 왕 아기 예수"></iframe>
       </div>
       <div class="mobile-player" onclick="openMobile(2)">
         <div class="mob-thumb" style="background-image:url('https://img.youtube.com/vi/KpMw-keZehg/hqdefault.jpg')"></div>
@@ -400,7 +400,7 @@
         <button class="part-tab" onclick="selectPart(3,'_p',this)">🎹 반주</button>
       </div>
       <div class="player-wrap desktop-player" id="wrap-3">
-        <iframe id="iframe-3" src="https://www.youtube.com/embed/-MhQ1RCu-oU?rel=0&playsinline=1&modestbranding=1" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen scrolling="no" title="높은 곳에 영광"></iframe>
+        <iframe id="iframe-3" src="https://www.youtube-nocookie.com/embed/-MhQ1RCu-oU?rel=0&playsinline=1&modestbranding=1&fs=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen title="높은 곳에 영광"></iframe>
       </div>
       <div class="mobile-player" onclick="openMobile(3)">
         <div class="mob-thumb" style="background-image:url('https://img.youtube.com/vi/-MhQ1RCu-oU/hqdefault.jpg')"></div>
@@ -445,7 +445,7 @@
         <button class="part-tab" onclick="selectPart(4,'_p',this)">🎹 반주</button>
       </div>
       <div class="player-wrap desktop-player" id="wrap-4">
-        <iframe id="iframe-4" src="https://www.youtube.com/embed/kL1TJCZENfE?rel=0&playsinline=1&modestbranding=1" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen scrolling="no" title="Happy Birthday Jesus"></iframe>
+        <iframe id="iframe-4" src="https://www.youtube-nocookie.com/embed/kL1TJCZENfE?rel=0&playsinline=1&modestbranding=1&fs=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen title="Happy Birthday Jesus"></iframe>
       </div>
       <div class="mobile-player" onclick="openMobile(4)">
         <div class="mob-thumb" style="background-image:url('https://img.youtube.com/vi/kL1TJCZENfE/hqdefault.jpg')"></div>
@@ -586,8 +586,8 @@
 
     if (suffix === '') {
       // 전체합창 → YouTube 직접 embed (모바일 포함 전체 작동)
-      iframe.src = 'https://www.youtube.com/embed/' + YT_IDS[songIdx]
-        + '?rel=0&playsinline=1&modestbranding=1';
+      iframe.src = 'https://www.youtube-nocookie.com/embed/' + YT_IDS[songIdx]
+        + '?rel=0&playsinline=1&modestbranding=1&fs=1';
     } else {
       // 파트 선택 → 모바일: 새탭, 데스크탑: iframe
       const vitnaraUrl = BASES[songIdx] + suffix + '.html';
