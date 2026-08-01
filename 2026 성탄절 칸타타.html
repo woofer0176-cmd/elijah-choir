@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>엘리야 성가대 - Elijah Choir</title>
+  
+  <!-- Google Fonts & FontAwesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --primary-color: #1a365d;
+      --accent-color: #c5a059;
+      --bg-color: #f4f6f9;
+      --card-bg: #ffffff;
+      --text-main: #2d3748;
+      --text-muted: #718096;
+      --border-color: #e2e8f0;
+      --radius: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding-bottom: 50px;
+    }
+
+    /* 헤더 */
+    header {
+      background: linear-gradient(135deg, #1a365d 0%, #2a4365 100%);
+      color: #ffffff;
+      padding: 35px 20px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+
+    header p {
+      color: #cbd5e0;
+      font-size: 0.95rem;
+      font-weight: 300;
+    }
+
+    /* 메인 컨테이너 */
+    .container {
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 20px 16px;
+    }
+
+    /* 카드 스타일 */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      color: var(--primary-color);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 2px solid #edf2f7;
+      padding-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .card-title i {
+      color: var(--accent-color);
+    }
+
+    /* 이번 주 찬양 정보 */
+    .song-banner {
+      background: #f8fafc;
+      border-left: 4px solid var(--accent-color);
+      padding: 16px 20px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+
+    .song-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 6px;
+    }
+
+    .song-meta {
+      font-size: 0.92rem;
+      color: #4a5568;
+    }
+
+    /* 파트별 음원 그리드 */
+    .part-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .part-card {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .part-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .part-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--primary-color);
+    }
+
+    .badge {
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.78rem;
+      color: white;
+      font-weight: 500;
+    }
+
+    .badge-all { background-color: #4a5568; }
+    .badge-soprano { background-color: #e53e3e; }
+    .badge-alto { background-color: #dd6b20; }
+    .badge-tenor { background-color: #319795; }
+    .badge-bass { background-color: #3182ce; }
+
+    audio {
+      width: 100%;
+      height: 38px;
+      margin-top: 8px;
+    }
+
+    /* 버튼 스타일 */
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      flex: 1;
+      min-width: 140px;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #2a4365;
+    }
+
+    .btn-outline {
+      background-color: #ffffff;
+      color: var(--primary-color);
+      border: 1px solid var(--primary-color);
+    }
+
+    .btn-outline:hover {
+      background-color: #edf2f7;
+    }
+
+    /* 악보 이미지 영역 */
+    .sheet-viewer {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+      margin-top: 15px;
+      background: #ffffff;
+      text-align: center;
+    }
+
+    .sheet-viewer img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* 비디오 플레이어 (반응형 16:9) */
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    /* 푸터 */
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 헤더 -->
+  <header>
+    <h1><i class="fa-solid fa-music"></i> 엘리야 성가대</h1>
+    <p>하나님을 찬양하는 기쁨의 소리</p>
+  </header>
+
+  <!-- 메인 컨테이너 -->
+  <div class="container">
+
+    <!-- 1. 찬양 정보 -->
+    <div class="card">
+      <h2 class="card-title"><i class="fa-solid fa-calendar-check"></i> 이번 주 찬양 안내</h2>
+      
+      <div class="song-banner">
+        <div class="song-title">기쁨으로 노래하라</div>
+        <div class="song-meta">지휘: 박지휘 / 반주: 이반주</div>
+      </div>
+
+      <!-- 악보 보기 및 다운로드 버튼 -->
+      <div class="btn-group">
+        <a href="01.png" target="_blank" class="btn btn-primary">
+          <i class="fa-solid fa-file-image"></i> 악보 원본 크게 보기
+        </a>
+        <a href="01.png" download class="btn btn-outline">
+          <i class="fa-solid fa-download"></i> 악보 다운로드
+        </a>
+      </div>
+    </div>
+
+    <!-- 2. 파트별 연습 음원 -->
+    <div class="card">
+      <h2 class="card-title"><i class="fa-solid fa-headphones"></i> 파트별 연습 음원</h2>
+      
+      <div class="part-grid">
+        <!-- 전체 음원 -->
+        <div class="part-card">
+          <div class="part-header">
+            <span class="part-title">ALL (전체)</span>
+            <span class="badge badge-all">전체</span>
+          </div>
+          <audio controls preload="none">
+            <source src="audio/ALL.mp3" type="audio/mpeg">
+            브라우저가 오디오를 지원하지 않습니다.
+          </audio>
+        </div>
+
+        <!-- 소프라노 -->
+        <div class="part-card">
+          <div class="part-header">
+            <span class="part-title">Soprano</span>
+            <span class="badge badge-soprano">소프라노</span>
+          </div>
+          <audio controls preload="none">
+            <source src="audio/Soprano.mp3" type="audio/mpeg">
+          </audio>
+        </div>
+
+        <!-- 알토 -->
+        <div class="part-card">
+          <div class="part-header">
+            <span class="part-title">Alto</span>
+            <span class="badge badge-alto">알토</span>
+          </div>
+          <audio controls preload="none">
+            <source src="audio/Alto.mp3" type="audio/mpeg">
+          </audio>
+        </div>
+
+        <!-- 테너 -->
+        <div class="part-card">
+          <div class="part-header">
+            <span class="part-title">Tenor</span>
+            <span class="badge badge-tenor">테너</span>
+          </div>
+          <audio controls preload="none">
+            <source src="audio/Tenor.mp3" type="audio/mpeg">
+          </audio>
+        </div>
+
+        <!-- 베이스 -->
+        <div class="part-card">
+          <div class="part-header">
+            <span class="part-title">Bass</span>
+            <span class="badge badge-bass">베이스</span>
+          </div>
+          <audio controls preload="none">
+            <source src="audio/Bass.mp3" type="audio/mpeg">
+          </audio>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. 참고 영상 -->
+    <div class="card">
+      <h2 class="card-title"><i class="fa-brands fa-youtube"></i> 참고 영상</h2>
+      <div class="video-container">
+        <iframe src="https://www.youtube.com/embed/zS6A-YfA6q0" title="참고 영상" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <!-- 4. 악보 미리보기 -->
+    <div class="card">
+      <h2 class="card-title"><i class="fa-solid fa-book-open"></i> 찬양 악보 미리보기</h2>
+      <div class="sheet-viewer">
+        <img src="01.png" alt="기쁨으로 노래하라 악보">
+      </div>
+    </div>
+
+    <!-- 5. 성가대 연습 일정 및 안내 -->
+    <div class="card">
+      <h2 class="card-title"><i class="fa-solid fa-bullhorn"></i> 연습 일정 안내</h2>
+      <ul style="padding-left: 20px; color: var(--text-main); font-size: 0.95rem; line-height: 1.8;">
+        <li><strong>주일 연습:</strong> 매주 주일 오전 10시 (성가대실)</li>
+        <li><strong>가운 착용:</strong> 예배 시작 15분 전까지 정리를 마쳐주세요.</li>
+        <li>음원 재생에 오류가 발생할 경우 해당 파트장에게 알려주시기 바랍니다.</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- 푸터 -->
+  <footer>
+    <p>© Elijah Choir. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>
