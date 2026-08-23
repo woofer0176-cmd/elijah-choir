@@ -125,17 +125,40 @@ body{font-family:'Noto Sans KR',sans-serif;background:#faf8f3;color:#1a2820;line
 </div>
 
 <script>
-var songData = [
-  {week:'7월 1주', date:'2026-07-05', title:'야곱의 축복', url:'https://joongangart.kr/GoodNews2/22/pop1.html'},
-  {week:'7월 2주', date:'2026-07-12', title:'시편 8편', url:'https://joongangart.kr/GoodNews2/18/pop1.html'},
-  {week:'7월 3주', date:'2026-07-19', title:'누군가 널 위해 기도하네', url:'https://joongangart.kr/GoodNews2/05/pop1.html'},
-  {week:'7월 4주', date:'2026-07-26', title:'비 준비하시니', url:'https://joongangart.kr/GoodNews2/19/pop1.html'},
-  {week:'8월 1주', date:'2026-08-02', title:'성도여 다함께', url:'https://joongangart.kr/HarmonyPraises1/12/pop1.html'},
-  {week:'8월 2주', date:'2026-08-09', title:'내 모든 시험 무거운 짐을', url:'https://joongangart.kr/HarmonyPraises1/06/pop1.html'},
-  {week:'8월 3주', date:'2026-08-16', title:'예수 따라가며', url:'https://joongangart.kr/HarmonyPraises1/07/pop1.html'},
-  {week:'8월 4주', date:'2026-08-23', title:'면류관 벗어서', url:'https://joongangart.kr/HarmonyPraises1/15/pop1.html'},
-  {week:'8월 5주', date:'2026-08-30', title:'저 높은 곳을 향하여', url:'https://joongangart.kr/HarmonyPraises1/21/pop1.html'},
-];
+function buildSongData() {
+  var result = [];
+  var tabIds = ['this-month', 'next-month', 'two-months'];
+  var today = new Date();
+  var currentYear = today.getFullYear();
+  tabIds.forEach(function(tabId) {
+    var tab = document.getElementById(tabId);
+    if (!tab) return;
+    var headers = tab.querySelectorAll('.week-header');
+    headers.forEach(function(header) {
+      var badge = header.querySelector('.week-badge');
+      var dateDiv = header.querySelector('.week-date');
+      if (!badge || !dateDiv) return;
+      var week = badge.textContent.trim();
+      var m = dateDiv.textContent.trim().match(/(\d+)월\s*(\d+)일/);
+      if (!m) return;
+      var month = parseInt(m[1]);
+      var day = parseInt(m[2]);
+      var year = currentYear;
+      if (month < today.getMonth() - 1) year++;
+      var dateStr = year + '-' + String(month).padStart(2,'0') + '-' + String(day).padStart(2,'0');
+      var next = header.nextElementSibling;
+      while (next && !next.classList.contains('song-card')) next = next.nextElementSibling;
+      if (!next) return;
+      var titleEl = next.querySelector('.song-title');
+      var iframe = next.querySelector('iframe');
+      if (!titleEl || !iframe) return;
+      result.push({week:week, date:dateStr, title:titleEl.textContent.trim(), url:iframe.src});
+    });
+  });
+  result.sort(function(a,b){ return a.date.localeCompare(b.date); });
+  return result;
+}
+var songData = buildSongData();
 var autoUrls = {this:'', next:''};
 (function(){
   var today = new Date();
