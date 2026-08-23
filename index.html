@@ -13,6 +13,57 @@ document.addEventListener('DOMContentLoaded',function(){
   document.querySelectorAll('.content').forEach(function(c){c.style.removeProperty('display');c.classList.remove('active');});
   var m=document.getElementById('members');
   if(m){m.classList.add('active');}
+  // 이번주/다음주 배너 자동 업데이트
+  var songData = buildSongData();
+  var autoUrls = {this:'', next:''};
+  (function(){
+    var today = new Date();
+    // 오늘 기준 돌아오는 주일(일요일) 찾기
+    var day = today.getDay(); // 0=일, 1=월 ... 6=토
+    var daysUntilSunday = day === 0 ? 0 : 7 - day;
+    var thisSunday = new Date(today);
+    thisSunday.setDate(today.getDate() + daysUntilSunday);
+    thisSunday.setHours(0,0,0,0);
+    var nextSunday = new Date(thisSunday);
+    nextSunday.setDate(thisSunday.getDate() + 7);
+  
+    var thisWeekSong = null, nextWeekSong = null;
+    var thisMs = thisSunday.getTime();
+    var nextMs = nextSunday.getTime();
+    for(var i=0;i<songData.length;i++){
+      var d = new Date(songData[i].date);
+      var dMs = d.getTime();
+      if(Math.abs(dMs - thisMs) < 86400000) thisWeekSong = songData[i];
+      if(Math.abs(dMs - nextMs) < 86400000) nextWeekSong = songData[i];
+    }
+    if(!thisWeekSong){
+      for(var i=0;i<songData.length;i++){
+        var d = new Date(songData[i].date);
+        if(d.getTime() >= thisMs - 86400000){ thisWeekSong = songData[i]; break; }
+      }
+    }
+    if(!nextWeekSong && thisWeekSong){
+      var idx = songData.indexOf(thisWeekSong);
+      if(idx+1 < songData.length) nextWeekSong = songData[idx+1];
+    }
+    if(thisWeekSong){
+      document.getElementById('this-week-label').textContent = thisWeekSong.week + ' (' + thisWeekSong.date.slice(5).replace('-','/') + ')';
+      document.getElementById('this-week-title').textContent = thisWeekSong.title;
+      autoUrls.this = thisWeekSong.url;
+    }
+    if(nextWeekSong){
+      document.getElementById('next-week-label').textContent = nextWeekSong.week + ' (' + nextWeekSong.date.slice(5).replace('-','/') + ')';
+      document.getElementById('next-week-title').textContent = nextWeekSong.title;
+      autoUrls.next = nextWeekSong.url;
+    } else {
+      document.getElementById('next-week-title').textContent = '업데이트 예정';
+    }
+  })();
+  function playAutoSong(which){
+    var url = autoUrls[which];
+    if(!url){ alert('악보가 아직 준비 중입니다.'); return; }
+    openPlayer(url, which==='this' ? document.getElementById('this-week-title').textContent : document.getElementById('next-week-title').textContent);
+  }
 });
 </script>
 <style>
@@ -157,56 +208,6 @@ function buildSongData() {
   });
   result.sort(function(a,b){ return a.date.localeCompare(b.date); });
   return result;
-}
-var songData = buildSongData();
-var autoUrls = {this:'', next:''};
-(function(){
-  var today = new Date();
-  // 오늘 기준 돌아오는 주일(일요일) 찾기
-  var day = today.getDay(); // 0=일, 1=월 ... 6=토
-  var daysUntilSunday = day === 0 ? 0 : 7 - day;
-  var thisSunday = new Date(today);
-  thisSunday.setDate(today.getDate() + daysUntilSunday);
-  thisSunday.setHours(0,0,0,0);
-  var nextSunday = new Date(thisSunday);
-  nextSunday.setDate(thisSunday.getDate() + 7);
-
-  var thisWeekSong = null, nextWeekSong = null;
-  var thisMs = thisSunday.getTime();
-  var nextMs = nextSunday.getTime();
-  for(var i=0;i<songData.length;i++){
-    var d = new Date(songData[i].date);
-    var dMs = d.getTime();
-    if(Math.abs(dMs - thisMs) < 86400000) thisWeekSong = songData[i];
-    if(Math.abs(dMs - nextMs) < 86400000) nextWeekSong = songData[i];
-  }
-  if(!thisWeekSong){
-    for(var i=0;i<songData.length;i++){
-      var d = new Date(songData[i].date);
-      if(d.getTime() >= thisMs - 86400000){ thisWeekSong = songData[i]; break; }
-    }
-  }
-  if(!nextWeekSong && thisWeekSong){
-    var idx = songData.indexOf(thisWeekSong);
-    if(idx+1 < songData.length) nextWeekSong = songData[idx+1];
-  }
-  if(thisWeekSong){
-    document.getElementById('this-week-label').textContent = thisWeekSong.week + ' (' + thisWeekSong.date.slice(5).replace('-','/') + ')';
-    document.getElementById('this-week-title').textContent = thisWeekSong.title;
-    autoUrls.this = thisWeekSong.url;
-  }
-  if(nextWeekSong){
-    document.getElementById('next-week-label').textContent = nextWeekSong.week + ' (' + nextWeekSong.date.slice(5).replace('-','/') + ')';
-    document.getElementById('next-week-title').textContent = nextWeekSong.title;
-    autoUrls.next = nextWeekSong.url;
-  } else {
-    document.getElementById('next-week-title').textContent = '업데이트 예정';
-  }
-})();
-function playAutoSong(which){
-  var url = autoUrls[which];
-  if(!url){ alert('악보가 아직 준비 중입니다.'); return; }
-  openPlayer(url, which==='this' ? document.getElementById('this-week-title').textContent : document.getElementById('next-week-title').textContent);
 }
 </script>
 
