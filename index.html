@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded',function(){
   if(m){m.classList.add('active');}
   // 이번주/다음주 배너 자동 업데이트
   var songData = buildSongData();
-  var autoUrls = {this:'', next:''};
   (function(){
     var today = new Date();
     // 오늘 기준 돌아오는 주일(일요일) 찾기
@@ -176,6 +175,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#faf8f3;color:#1a2820;line
 </div>
 
 <script>
+var autoUrls = {this:'', next:''};
 function buildSongData() {
   var result = [];
   var tabIds = ['this-month', 'next-month', 'two-months'];
