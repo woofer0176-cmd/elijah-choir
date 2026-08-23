@@ -58,12 +58,12 @@ document.addEventListener('DOMContentLoaded',function(){
       document.getElementById('next-week-title').textContent = '업데이트 예정';
     }
   })();
-  function playAutoSong(which){
-    var url = autoUrls[which];
-    if(!url){ alert('악보가 아직 준비 중입니다.'); return; }
-    openPlayer(url, which==='this' ? document.getElementById('this-week-title').textContent : document.getElementById('next-week-title').textContent);
-  }
 });
+function playAutoSong(which){
+  var url = autoUrls[which];
+  if(!url){ alert('악보가 아직 준비 중입니다.'); return; }
+  openPlayer(url, which==='this' ? document.getElementById('this-week-title').textContent : document.getElementById('next-week-title').textContent);
+}
 </script>
 <style>
 .content{display:none !important;}
