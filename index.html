@@ -555,7 +555,7 @@ function openPlayer(url, title){
     playerPageUrl = url;
     var yid = specialYoutube[url];
     if(yid){
-      playUrl = 'https://www.youtube.com/embed/' + yid + '?loop=1&playlist=' + yid + '&playsinline=1&rel=0';
+      playUrl = 'https://www.youtube-nocookie.com/embed/' + yid + '?loop=1&playlist=' + yid + '&playsinline=1&rel=0';
     } else {
       modal.classList.add('page-view');
     }
