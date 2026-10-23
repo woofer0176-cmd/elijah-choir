@@ -137,6 +137,19 @@ body{font-family:'Noto Sans KR',sans-serif;background:#fdf4ea;color:#1a2820;line
 @media (prefers-reduced-motion: reduce){#autumn-leaves{display:none;}}
 body.media-on #autumn-leaves{display:none!important;}
 </style>
+<style>
+.card-facade{cursor:pointer;background:#3a1a08 radial-gradient(circle at 50% 45%,#6b2e0c 0%,#2a1206 75%);-webkit-tap-highlight-color:transparent;}
+.facade-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;}
+.facade-play{width:64px;height:64px;border-radius:50%;background:#f0d98a;color:#7B2E08;font-size:24px;display:flex;align-items:center;justify-content:center;padding-left:5px;box-sizing:border-box;box-shadow:0 4px 18px rgba(0,0,0,0.35);}
+.facade-text{color:#f0d98a;font-size:14px;font-weight:500;letter-spacing:0.5px;}
+.card-facade:active .facade-play{transform:scale(0.94);}
+.card-facade.playing{cursor:default;background:#000;}
+.card-facade.playing .facade-inner{display:none;}
+#kakao-tip{position:sticky;top:0;z-index:200;display:flex;align-items:center;gap:10px;padding:10px 14px;background:#FEE500;color:#3c1e1e;font-size:13px;font-weight:500;}
+#kakao-tip span{flex:1;line-height:1.4;}
+#kakao-tip a{background:#3c1e1e;color:#FEE500;text-decoration:none;padding:7px 12px;border-radius:16px;font-weight:700;white-space:nowrap;}
+#kakao-tip button{background:none;border:none;font-size:20px;color:#3c1e1e;padding:0 2px;cursor:pointer;}
+</style>
 </head>
 <body>
 <!-- 플레이어 모달 -->
@@ -220,9 +233,9 @@ function buildSongData() {
       while (next && !next.classList.contains('song-card')) next = next.nextElementSibling;
       if (!next) return;
       var titleEl = next.querySelector('.song-title');
-      var iframe = next.querySelector('iframe');
-      if (!titleEl || !iframe) return;
-      result.push({week:week, date:dateStr, title:titleEl.textContent.trim(), url:iframe.src});
+      var player = next.querySelector('.card-facade');
+      if (!titleEl || !player) return;
+      result.push({week:week, date:dateStr, title:titleEl.textContent.trim(), url:player.getAttribute('data-src')});
     });
   });
   result.sort(function(a,b){ return a.date.localeCompare(b.date); });
@@ -239,7 +252,7 @@ function buildSongData() {
   <div style="background:#fdf0e4;padding:16px 0 100px;">
 
   <div class="week-header"><div class="week-badge">10월 1주</div><div class="week-date">10월 4일 (주일)</div></div>
-  <div class="song-card"><div class="song-info"><div class="song-book">중앙아트 50곡 · 02번</div><div class="song-title">하나님의 시간</div></div><div class="video-wrap"><iframe class="card-player" src="https://joongangart.kr/joongang50/02/pop1.html" loading="lazy" allowfullscreen></iframe></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/02/pop1.html','합창');return false;">합창</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/02/pop2.html','소프');return false;">소프</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/02/pop3.html','알토');return false;">알토</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/02/pop4.html','테너');return false;">테너</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/02/pop5.html','베이스');return false;">베이스</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/02/pop6.html','반주');return false;">반주</a></div></div> <style>details.pt-toggle > summary::-webkit-details-marker{display:none;}</style>
+  <div class="song-card"><div class="song-info"><div class="song-book">중앙아트 50곡 · 02번</div><div class="song-title">하나님의 시간</div></div><div class="video-wrap card-facade" data-src="https://joongangart.kr/joongang50/02/pop1.html" role="button" tabindex="0" aria-label="연습 영상 열기"><div class="facade-inner"><span class="facade-play">▶</span><span class="facade-text">눌러서 연습 영상 열기</span></div></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/02/pop1.html','합창');return false;">합창</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/02/pop2.html','소프');return false;">소프</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/02/pop3.html','알토');return false;">알토</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/02/pop4.html','테너');return false;">테너</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/02/pop5.html','베이스');return false;">베이스</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/02/pop6.html','반주');return false;">반주</a></div></div> <style>details.pt-toggle > summary::-webkit-details-marker{display:none;}</style>
 <details class="pt-toggle" style="margin:0 12px 16px;background:#f3f0fb;border:1px solid #c8b8f0;border-radius:12px;padding:14px 16px;">
 <summary style="font-size:13px;font-weight:700;color:#5a3abf;cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px;user-select:none;"><span style="color:#e53935;font-size:15px;">▶</span> 🎯 집중 연습 포인트 — 하나님의 시간 <span style="font-size:11px;color:#e53935;font-weight:400;">(빨간색 삼각형을 누르세요)</span></summary>
 <div style="display:grid;gap:8px;margin-top:10px;">
@@ -262,9 +275,9 @@ function buildSongData() {
 </div>
 </details>
   <div class="week-header"><div class="week-badge">10월 2주</div><div class="week-date">10월 11일 (주일)</div></div>
-  <div class="song-card"><div class="song-info"><div class="song-book">중앙아트 50곡 · 18번</div><div class="song-title">섬김</div></div><div class="video-wrap"><iframe class="card-player" src="https://joongangart.kr/joongang50/18/pop1.html" loading="lazy" allowfullscreen></iframe></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/18/pop1.html','합창');return false;">합창</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/18/pop2.html','소프');return false;">소프</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/18/pop3.html','알토');return false;">알토</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/18/pop4.html','테너');return false;">테너</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/18/pop5.html','베이스');return false;">베이스</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/18/pop6.html','반주');return false;">반주</a></div></div>
+  <div class="song-card"><div class="song-info"><div class="song-book">중앙아트 50곡 · 18번</div><div class="song-title">섬김</div></div><div class="video-wrap card-facade" data-src="https://joongangart.kr/joongang50/18/pop1.html" role="button" tabindex="0" aria-label="연습 영상 열기"><div class="facade-inner"><span class="facade-play">▶</span><span class="facade-text">눌러서 연습 영상 열기</span></div></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/18/pop1.html','합창');return false;">합창</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/18/pop2.html','소프');return false;">소프</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/18/pop3.html','알토');return false;">알토</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/18/pop4.html','테너');return false;">테너</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/18/pop5.html','베이스');return false;">베이스</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/18/pop6.html','반주');return false;">반주</a></div></div>
   <div class="week-header"><div class="week-badge">10월 3주</div><div class="week-date">10월 18일 (주일)</div></div>
-  <div class="song-card"><div class="song-info"><div class="song-book">중앙아트 50곡 · 08번</div><div class="song-title">내게 능력 주시는 자</div></div><div class="video-wrap"><iframe class="card-player" src="https://joongangart.kr/joongang50/08/pop1.html" loading="lazy" allowfullscreen></iframe></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/08/pop1.html','합창');return false;">합창</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/08/pop2.html','소프');return false;">소프</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/08/pop3.html','알토');return false;">알토</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/08/pop4.html','테너');return false;">테너</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/08/pop5.html','베이스');return false;">베이스</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/08/pop6.html','반주');return false;">반주</a></div></div>
+  <div class="song-card"><div class="song-info"><div class="song-book">중앙아트 50곡 · 08번</div><div class="song-title">내게 능력 주시는 자</div></div><div class="video-wrap card-facade" data-src="https://joongangart.kr/joongang50/08/pop1.html" role="button" tabindex="0" aria-label="연습 영상 열기"><div class="facade-inner"><span class="facade-play">▶</span><span class="facade-text">눌러서 연습 영상 열기</span></div></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/08/pop1.html','합창');return false;">합창</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/08/pop2.html','소프');return false;">소프</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/08/pop3.html','알토');return false;">알토</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/08/pop4.html','테너');return false;">테너</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/08/pop5.html','베이스');return false;">베이스</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/08/pop6.html','반주');return false;">반주</a></div></div>
 <details class="pt-toggle" style="margin:0 12px 16px;background:#f3f0fb;border:1px solid #c8b8f0;border-radius:12px;padding:14px 16px;">
 <summary style="font-size:13px;font-weight:700;color:#5a3abf;cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px;user-select:none;"><span style="color:#e53935;font-size:15px;">▶</span> 🎯 집중 연습 포인트 — 내게 능력 주시는 자 <span style="font-size:11px;color:#e53935;font-weight:400;">(빨간색 삼각형을 누르세요)</span></summary>
 <div style="display:grid;gap:8px;margin-top:10px;">
@@ -405,7 +418,7 @@ function buildSongData() {
 </div>
 </details>
   <div class="week-header"><div class="week-badge">10월 4주</div><div class="week-date">10월 25일 (주일)</div></div>
-  <div class="song-card"><div class="song-info"><div class="song-book">중앙아트 50곡 · 28번</div><div class="song-title">말씀 앞에서</div></div><div class="video-wrap"><iframe class="card-player" src="https://joongangart.kr/joongang50/28/pop1.html" loading="lazy" allowfullscreen></iframe></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/28/pop1.html','합창');return false;">합창</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/28/pop2.html','소프');return false;">소프</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/28/pop3.html','알토');return false;">알토</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/28/pop4.html','테너');return false;">테너</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/28/pop5.html','베이스');return false;">베이스</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/28/pop6.html','반주');return false;">반주</a></div></div>
+  <div class="song-card"><div class="song-info"><div class="song-book">중앙아트 50곡 · 28번</div><div class="song-title">말씀 앞에서</div></div><div class="video-wrap card-facade" data-src="https://joongangart.kr/joongang50/28/pop1.html" role="button" tabindex="0" aria-label="연습 영상 열기"><div class="facade-inner"><span class="facade-play">▶</span><span class="facade-text">눌러서 연습 영상 열기</span></div></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/28/pop1.html','합창');return false;">합창</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/28/pop2.html','소프');return false;">소프</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/28/pop3.html','알토');return false;">알토</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/28/pop4.html','테너');return false;">테너</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/28/pop5.html','베이스');return false;">베이스</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/28/pop6.html','반주');return false;">반주</a></div></div>
 <details class="pt-toggle" style="margin:0 12px 16px;background:#f3f0fb;border:1px solid #c8b8f0;border-radius:12px;padding:14px 16px;">
 <summary style="font-size:13px;font-weight:700;color:#5a3abf;cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px;user-select:none;"><span style="color:#e53935;font-size:15px;">▶</span> 🎯 집중 연습 포인트 — 말씀 앞에서 <span style="font-size:11px;color:#e53935;font-weight:400;">(빨간색 삼각형을 누르세요)</span></summary>
 <div style="display:grid;gap:8px;margin-top:10px;">
@@ -563,15 +576,15 @@ function buildSongData() {
     <p style="font-size:13px;color:#a8c8e8;margin:0;">2026년 11월 예정 찬양</p>
   </div>
   <div class="week-header"><div class="week-badge">11월 1주</div><div class="week-date">11월 1일 (추수감사주일)</div></div>
-  <div class="song-card"><div class="song-info"><div class="song-book">중앙아트 50곡 · 26번</div><div class="song-title">거룩하신 하나님</div></div><div class="video-wrap"><iframe class="card-player" src="https://joongangart.kr/joongang50/26/pop1.html" loading="lazy" allowfullscreen></iframe></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/26/pop1.html','합창');return false;">합창</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/26/pop2.html','소프');return false;">소프</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/26/pop3.html','알토');return false;">알토</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/26/pop4.html','테너');return false;">테너</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/26/pop5.html','베이스');return false;">베이스</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/26/pop6.html','반주');return false;">반주</a></div></div>
+  <div class="song-card"><div class="song-info"><div class="song-book">중앙아트 50곡 · 26번</div><div class="song-title">거룩하신 하나님</div></div><div class="video-wrap card-facade" data-src="https://joongangart.kr/joongang50/26/pop1.html" role="button" tabindex="0" aria-label="연습 영상 열기"><div class="facade-inner"><span class="facade-play">▶</span><span class="facade-text">눌러서 연습 영상 열기</span></div></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/26/pop1.html','합창');return false;">합창</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/26/pop2.html','소프');return false;">소프</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/26/pop3.html','알토');return false;">알토</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/26/pop4.html','테너');return false;">테너</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/26/pop5.html','베이스');return false;">베이스</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/26/pop6.html','반주');return false;">반주</a></div></div>
   <div class="week-header"><div class="week-badge">11월 2주</div><div class="week-date">11월 8일 (주일)</div></div>
-  <div class="song-card"><div class="song-info"><div class="song-book">중앙아트 50곡 · 27번</div><div class="song-title">거룩한 성</div></div><div class="video-wrap"><iframe class="card-player" src="https://joongangart.kr/joongang50/27/pop1.html" loading="lazy" allowfullscreen></iframe></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/27/pop1.html','합창');return false;">합창</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/27/pop2.html','소프');return false;">소프</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/27/pop3.html','알토');return false;">알토</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/27/pop4.html','테너');return false;">테너</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/27/pop5.html','베이스');return false;">베이스</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/27/pop6.html','반주');return false;">반주</a></div></div>
+  <div class="song-card"><div class="song-info"><div class="song-book">중앙아트 50곡 · 27번</div><div class="song-title">거룩한 성</div></div><div class="video-wrap card-facade" data-src="https://joongangart.kr/joongang50/27/pop1.html" role="button" tabindex="0" aria-label="연습 영상 열기"><div class="facade-inner"><span class="facade-play">▶</span><span class="facade-text">눌러서 연습 영상 열기</span></div></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/27/pop1.html','합창');return false;">합창</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/27/pop2.html','소프');return false;">소프</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/27/pop3.html','알토');return false;">알토</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/27/pop4.html','테너');return false;">테너</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/27/pop5.html','베이스');return false;">베이스</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/27/pop6.html','반주');return false;">반주</a></div></div>
   <div class="week-header"><div class="week-badge">11월 3주</div><div class="week-date">11월 15일 (주일)</div></div>
-  <div class="song-card"><div class="song-info"><div class="song-book">중앙아트 50곡 · 04번</div><div class="song-title">임재</div></div><div class="video-wrap"><iframe class="card-player" src="https://joongangart.kr/joongang50/04/pop1.html" loading="lazy" allowfullscreen></iframe></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/04/pop1.html','합창');return false;">합창</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/04/pop2.html','소프');return false;">소프</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/04/pop3.html','알토');return false;">알토</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/04/pop4.html','테너');return false;">테너</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/04/pop5.html','베이스');return false;">베이스</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/04/pop6.html','반주');return false;">반주</a></div></div>
+  <div class="song-card"><div class="song-info"><div class="song-book">중앙아트 50곡 · 04번</div><div class="song-title">임재</div></div><div class="video-wrap card-facade" data-src="https://joongangart.kr/joongang50/04/pop1.html" role="button" tabindex="0" aria-label="연습 영상 열기"><div class="facade-inner"><span class="facade-play">▶</span><span class="facade-text">눌러서 연습 영상 열기</span></div></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/04/pop1.html','합창');return false;">합창</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/04/pop2.html','소프');return false;">소프</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/04/pop3.html','알토');return false;">알토</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/04/pop4.html','테너');return false;">테너</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/04/pop5.html','베이스');return false;">베이스</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/04/pop6.html','반주');return false;">반주</a></div></div>
   <div class="week-header"><div class="week-badge">11월 4주</div><div class="week-date">11월 22일 (주일)</div></div>
-  <div class="song-card"><div class="song-info"><div class="song-book">중앙아트 50곡 · 11번</div><div class="song-title">주 영광 선포하라</div></div><div class="video-wrap"><iframe class="card-player" src="https://joongangart.kr/joongang50/11/pop1.html" loading="lazy" allowfullscreen></iframe></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/11/pop1.html','합창');return false;">합창</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/11/pop2.html','소프');return false;">소프</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/11/pop3.html','알토');return false;">알토</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/11/pop4.html','테너');return false;">테너</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/11/pop5.html','베이스');return false;">베이스</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/11/pop6.html','반주');return false;">반주</a></div></div>
+  <div class="song-card"><div class="song-info"><div class="song-book">중앙아트 50곡 · 11번</div><div class="song-title">주 영광 선포하라</div></div><div class="video-wrap card-facade" data-src="https://joongangart.kr/joongang50/11/pop1.html" role="button" tabindex="0" aria-label="연습 영상 열기"><div class="facade-inner"><span class="facade-play">▶</span><span class="facade-text">눌러서 연습 영상 열기</span></div></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/11/pop1.html','합창');return false;">합창</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/11/pop2.html','소프');return false;">소프</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/11/pop3.html','알토');return false;">알토</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/11/pop4.html','테너');return false;">테너</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/11/pop5.html','베이스');return false;">베이스</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang50/11/pop6.html','반주');return false;">반주</a></div></div>
   <div class="week-header"><div class="week-badge">11월 5주</div><div class="week-date">11월 29일 (대강절 첫째 주일)</div></div>
-  <div class="song-card"><div class="song-info"><div class="song-book">대강절 특선</div><div class="song-title">그의 길을 예비하라</div></div><div class="video-wrap"><iframe class="card-player" src="https://jubil2018.cafe24.com/online_pt/htm/life/02.htm" loading="lazy" allowfullscreen></iframe></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://jubil2018.cafe24.com/online_pt/htm/life/02.htm','그의 길을 예비하라');return false;">합창 듣기</a></div></div>
+  <div class="song-card"><div class="song-info"><div class="song-book">대강절 특선</div><div class="song-title">그의 길을 예비하라</div></div><div class="video-wrap card-facade" data-src="https://jubil2018.cafe24.com/online_pt/htm/life/02.htm" role="button" tabindex="0" aria-label="연습 영상 열기"><div class="facade-inner"><span class="facade-play">▶</span><span class="facade-text">눌러서 연습 영상 열기</span></div></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://jubil2018.cafe24.com/online_pt/htm/life/02.htm','그의 길을 예비하라');return false;">합창 듣기</a></div></div>
 </div>
 
 <!-- 대원 -->
@@ -653,13 +666,13 @@ function buildSongData() {
     <p style="font-size:13px;color:#a8c8e8;margin:0;">2026년 12월 예정 찬양</p>
   </div>
   <div class="week-header"><div class="week-badge">12월 1주</div><div class="week-date">12월 6일 (특별찬양/대강절)</div></div>
-  <div class="song-card"><div class="song-info"><div class="song-book">대강절 특선</div><div class="song-title">베들레헴의 빛</div></div><div class="video-wrap"><iframe class="card-player" src="https://jubil2018.cafe24.com/online_pt/htm/life/03.htm" loading="lazy" allowfullscreen></iframe></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://jubil2018.cafe24.com/online_pt/htm/life/03.htm','베들레헴의 빛');return false;">합창 듣기</a></div></div>
+  <div class="song-card"><div class="song-info"><div class="song-book">대강절 특선</div><div class="song-title">베들레헴의 빛</div></div><div class="video-wrap card-facade" data-src="https://jubil2018.cafe24.com/online_pt/htm/life/03.htm" role="button" tabindex="0" aria-label="연습 영상 열기"><div class="facade-inner"><span class="facade-play">▶</span><span class="facade-text">눌러서 연습 영상 열기</span></div></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://jubil2018.cafe24.com/online_pt/htm/life/03.htm','베들레헴의 빛');return false;">합창 듣기</a></div></div>
   <div class="week-header"><div class="week-badge">12월 2주</div><div class="week-date">12월 13일 (특별찬양/대강절)</div></div>
-  <div class="song-card"><div class="song-info"><div class="song-book">대강절 특선</div><div class="song-title">찬양의 빛</div></div><div class="video-wrap"><iframe class="card-player" src="https://jubil2018.cafe24.com/online_pt/htm/life/05.htm" loading="lazy" allowfullscreen></iframe></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://jubil2018.cafe24.com/online_pt/htm/life/05.htm','찬양의 빛');return false;">합창 듣기</a></div></div>
+  <div class="song-card"><div class="song-info"><div class="song-book">대강절 특선</div><div class="song-title">찬양의 빛</div></div><div class="video-wrap card-facade" data-src="https://jubil2018.cafe24.com/online_pt/htm/life/05.htm" role="button" tabindex="0" aria-label="연습 영상 열기"><div class="facade-inner"><span class="facade-play">▶</span><span class="facade-text">눌러서 연습 영상 열기</span></div></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://jubil2018.cafe24.com/online_pt/htm/life/05.htm','찬양의 빛');return false;">합창 듣기</a></div></div>
   <div class="week-header"><div class="week-badge">12월 3주</div><div class="week-date">12월 20일 (특별찬양/대강절)</div></div>
-  <div class="song-card"><div class="song-info"><div class="song-book">대강절 특선</div><div class="song-title">기쁨의 빛</div></div><div class="video-wrap"><iframe class="card-player" src="https://jubil2018.cafe24.com/online_pt/htm/life/07.htm" loading="lazy" allowfullscreen></iframe></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://jubil2018.cafe24.com/online_pt/htm/life/07.htm','기쁨의 빛');return false;">합창 듣기</a></div></div>
+  <div class="song-card"><div class="song-info"><div class="song-book">대강절 특선</div><div class="song-title">기쁨의 빛</div></div><div class="video-wrap card-facade" data-src="https://jubil2018.cafe24.com/online_pt/htm/life/07.htm" role="button" tabindex="0" aria-label="연습 영상 열기"><div class="facade-inner"><span class="facade-play">▶</span><span class="facade-text">눌러서 연습 영상 열기</span></div></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://jubil2018.cafe24.com/online_pt/htm/life/07.htm','기쁨의 빛');return false;">합창 듣기</a></div></div>
   <div class="week-header"><div class="week-badge">12월 4주</div><div class="week-date">12월 27일 (2026년 마지막 찬양)</div></div>
-  <div class="song-card"><div class="song-info"><div class="song-book">중앙성가 51집 · 23번</div><div class="song-title">하나님 없이는</div></div><div class="video-wrap"><iframe class="card-player" src="https://joongangart.kr/joongang51/23/pop1.html" loading="lazy" allowfullscreen></iframe></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://joongangart.kr/joongang51/23/pop1.html','합창');return false;">합창</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang51/23/pop2.html','소프');return false;">소프</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang51/23/pop3.html','알토');return false;">알토</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang51/23/pop4.html','테너');return false;">테너</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang51/23/pop5.html','베이스');return false;">베이스</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang51/23/pop6.html','반주');return false;">반주</a></div></div>
+  <div class="song-card"><div class="song-info"><div class="song-book">중앙성가 51집 · 23번</div><div class="song-title">하나님 없이는</div></div><div class="video-wrap card-facade" data-src="https://joongangart.kr/joongang51/23/pop1.html" role="button" tabindex="0" aria-label="연습 영상 열기"><div class="facade-inner"><span class="facade-play">▶</span><span class="facade-text">눌러서 연습 영상 열기</span></div></div><div class="parts-grid"><a class="part-btn main" href="#" onclick="openPlayer('https://joongangart.kr/joongang51/23/pop1.html','합창');return false;">합창</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang51/23/pop2.html','소프');return false;">소프</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang51/23/pop3.html','알토');return false;">알토</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang51/23/pop4.html','테너');return false;">테너</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang51/23/pop5.html','베이스');return false;">베이스</a><a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang51/23/pop6.html','반주');return false;">반주</a></div></div>
 </div>
 <!-- 송영곡 -->
 <div id="songyoung" class="content">
@@ -681,9 +694,7 @@ function buildSongData() {
         <div class="song-book" style="color:#7a5abf;">입례송 · 6월 2주차부터</div>
         <div class="song-title">할렐루야 왕의 왕께</div>
       </div>
-      <div class="video-wrap">
-        <iframe class="card-player" src="https://joongangart.kr/joongang49/31/pop1.html" loading="lazy" allowfullscreen></iframe>
-      </div>
+      <div class="video-wrap card-facade" data-src="https://joongangart.kr/joongang49/31/pop1.html" role="button" tabindex="0" aria-label="연습 영상 열기"><div class="facade-inner"><span class="facade-play">▶</span><span class="facade-text">눌러서 연습 영상 열기</span></div></div>
       <div class="parts-grid">
         <a class="part-btn main" href="#" onclick="openPlayer('https://joongangart.kr/joongang49/31/pop1.html','합창');return false;">합창</a>
         <a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang49/31/pop2.html','소프 | Vocal');return false;">소프 | Vocal</a>
@@ -723,9 +734,7 @@ function buildSongData() {
         <div class="song-book" style="color:#7a5abf;">기도송 · 6월 3주차부터</div>
         <div class="song-title">우리의 기도를</div>
       </div>
-      <div class="video-wrap">
-        <iframe class="card-player" src="https://joongangart.kr/joongang49/32/pop1.html" loading="lazy" allowfullscreen></iframe>
-      </div>
+      <div class="video-wrap card-facade" data-src="https://joongangart.kr/joongang49/32/pop1.html" role="button" tabindex="0" aria-label="연습 영상 열기"><div class="facade-inner"><span class="facade-play">▶</span><span class="facade-text">눌러서 연습 영상 열기</span></div></div>
       <div class="parts-grid">
         <a class="part-btn main" href="#" onclick="openPlayer('https://joongangart.kr/joongang49/32/pop1.html','합창');return false;">합창</a>
         <a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang49/32/pop2.html','소프 | Vocal');return false;">소프 | Vocal</a>
@@ -765,9 +774,7 @@ function buildSongData() {
         <div class="song-book" style="color:#7a5abf;">축도송 · 6월 4주차부터</div>
         <div class="song-title">축도송</div>
       </div>
-      <div class="video-wrap">
-        <iframe class="card-player" src="https://joongangart.kr/joongang49/33/pop1.html" loading="lazy" allowfullscreen></iframe>
-      </div>
+      <div class="video-wrap card-facade" data-src="https://joongangart.kr/joongang49/33/pop1.html" role="button" tabindex="0" aria-label="연습 영상 열기"><div class="facade-inner"><span class="facade-play">▶</span><span class="facade-text">눌러서 연습 영상 열기</span></div></div>
       <div class="parts-grid">
         <a class="part-btn main" href="#" onclick="openPlayer('https://joongangart.kr/joongang49/33/pop1.html','합창');return false;">합창</a>
         <a class="part-btn" href="#" onclick="openPlayer('https://joongangart.kr/joongang49/33/pop2.html','소프 | Vocal');return false;">소프 | Vocal</a>
@@ -820,7 +827,7 @@ function buildSongData() {
 
 <script>
 function showTab(id,el){
-  if(_inlineMedia){ _inlineMedia = false; document.body.classList.toggle('media-on', _modalMedia); resumeCardPlayers(); }
+  stopCardPlayer();
   document.querySelectorAll('.content').forEach(c=>{c.classList.remove('active');c.style.removeProperty('display');});
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   var target = document.getElementById(id);
@@ -833,52 +840,71 @@ window.onload = function(){
   if(m){m.classList.add('active');}
 }
 
-/* ── 모바일 재생 안정화 (index-31-131) ──
-   1) 합창·파트 창이 열리면 카드 안 플레이어를 잠시 내려 한 번에 하나만 재생
-   2) 재생 중에는 낙엽 애니메이션 정지
-   3) 카드 화면을 직접 눌러 재생하면 낙엽 정지 + 다른 카드 플레이어 내림 */
-var _modalMedia = false, _inlineMedia = false;
-function setMediaOn(on){
-  _modalMedia = on;
-  document.body.classList.toggle('media-on', _modalMedia || _inlineMedia);
-}
-function suspendCardPlayers(except){
-  document.querySelectorAll('iframe.card-player').forEach(function(f){
-    if(f === except) return;
-    var cur = f.getAttribute('src');
-    if(cur && cur !== 'about:blank'){ f.setAttribute('data-src', cur); f.setAttribute('src', 'about:blank'); }
-  });
-}
-function resumeCardPlayers(){
-  if(_inlineMedia) return;
-  document.querySelectorAll('iframe.card-player').forEach(function(f){
-    var d = f.getAttribute('data-src');
-    if(d && f.getAttribute('src') === 'about:blank'){ f.setAttribute('src', d); }
-  });
-}
-window.addEventListener('blur', function(){
-  setTimeout(function(){
-    var a = document.activeElement;
-    if(a && a.tagName === 'IFRAME' && a.classList.contains('card-player')){
-      _inlineMedia = true;
-      document.body.classList.add('media-on');
-      suspendCardPlayers(a);
+/* ── 모바일 재생 안정화 v3 (2026-10-24) ──
+   1) 카드 영상은 처음부터 띄우지 않고, 누른 카드 하나만 그때 불러옴 (항상 플레이어 1개)
+      → 휴대폰 메모리 부족으로 재생이 끊기던 문제, 여러 플레이어가 서로 소리를 빼앗던 문제 해결
+   2) 재생 중에는 화면이 저절로 꺼지지 않도록 화면 켜짐 유지(Wake Lock)
+   3) 재생 중에는 낙엽 애니메이션 정지
+   4) 카카오톡 안에서 열면 외부 브라우저로 열기 안내 */
+var _activeCard = null, _modalOpen = false, _wakeLock = null;
+function updateWakeLock(){
+  try{
+    var want = (!!_activeCard || _modalOpen) && document.visibilityState === 'visible';
+    if(want && !_wakeLock && navigator.wakeLock){
+      navigator.wakeLock.request('screen').then(function(l){
+        _wakeLock = l;
+        l.addEventListener('release', function(){ if(_wakeLock === l) _wakeLock = null; });
+      }).catch(function(){});
+    } else if(!want && _wakeLock){
+      var w = _wakeLock; _wakeLock = null; w.release().catch(function(){});
     }
-  }, 0);
+  }catch(e){}
+}
+function setMediaOn(){
+  document.body.classList.toggle('media-on', !!_activeCard || _modalOpen);
+  updateWakeLock();
+}
+function stopCardPlayer(){
+  if(!_activeCard) return;
+  var f = _activeCard.querySelector('iframe');
+  if(f){ f.src = 'about:blank'; f.parentNode.removeChild(f); }
+  _activeCard.classList.remove('playing');
+  _activeCard = null;
+  setMediaOn();
+}
+function playCard(card){
+  if(_activeCard === card) return;
+  stopCardPlayer();
+  var f = document.createElement('iframe');
+  f.className = 'card-player';
+  f.setAttribute('allow', 'autoplay; fullscreen');
+  f.setAttribute('allowfullscreen', '');
+  f.src = card.getAttribute('data-src');
+  card.appendChild(f);
+  card.classList.add('playing');
+  _activeCard = card;
+  setMediaOn();
+}
+document.addEventListener('click', function(e){
+  var c = e.target.closest ? e.target.closest('.card-facade') : null;
+  if(c && !c.classList.contains('playing')){ playCard(c); }
 });
-document.addEventListener('visibilitychange', function(){
-  if(document.visibilityState === 'visible' && /Android/i.test(navigator.userAgent) && !_inlineMedia){ resumeCardPlayers(); }
+document.addEventListener('keydown', function(e){
+  var c = document.activeElement;
+  if((e.key === 'Enter' || e.key === ' ') && c && c.classList && c.classList.contains('card-facade') && !c.classList.contains('playing')){ e.preventDefault(); playCard(c); }
 });
+document.addEventListener('visibilitychange', updateWakeLock);
+
 var playerCurrentUrl = '';
 function openPlayer(url, title){
-  /* 안드로이드(갤럭시 등): 사이트 안에 띄우지 않고 중앙아트 페이지를 새 창으로 바로 엶 (index-31-132) */
+  stopCardPlayer();
+  /* 안드로이드(갤럭시 등): 사이트 안에 띄우지 않고 새 창으로 바로 엶 */
   if(/Android/i.test(navigator.userAgent)){
-    suspendCardPlayers();
     var w = window.open(url, '_blank');
     if(!w){ window.location.href = url; }
     return;
   }
-  _inlineMedia = false; suspendCardPlayers(); setMediaOn(true);
+  _modalOpen = true; setMediaOn();
   playerCurrentUrl = url;
   var modal = document.getElementById('player-modal');
   if(url.indexOf('jubil2018.cafe24.com') > -1){ modal.classList.add('special'); } else { modal.classList.remove('special'); }
@@ -899,11 +925,28 @@ function toggleSpecialStop(){
   }
 }
 function closePlayer(){
-  resumeCardPlayers(); setMediaOn(false);
+  _modalOpen = false;
   document.getElementById('player-modal').style.display = 'none';
   document.getElementById('player-modal').classList.remove('special');
-  document.getElementById('player-iframe').src = '';
+  document.getElementById('player-iframe').src = 'about:blank';
+  setMediaOn();
 }
+
+/* 카카오톡 인앱 브라우저 안내 */
+document.addEventListener('DOMContentLoaded', function(){
+  if(!/KAKAOTALK/i.test(navigator.userAgent)) return;
+  try{ if(sessionStorage.getItem('kakaoTipClosed')) return; }catch(e){}
+  var bar = document.createElement('div');
+  bar.id = 'kakao-tip';
+  bar.innerHTML = '<span>카카오톡 안에서는 재생이 끊길 수 있어요.</span>'
+    + '<a href="kakaotalk://web/openExternal?url=' + encodeURIComponent(location.href) + '">브라우저로 열기</a>'
+    + '<button type="button" aria-label="닫기">×</button>';
+  bar.querySelector('button').onclick = function(){
+    bar.parentNode.removeChild(bar);
+    try{ sessionStorage.setItem('kakaoTipClosed','1'); }catch(e){}
+  };
+  document.body.insertBefore(bar, document.body.firstChild);
+});
 </script>
 
 <div id="member-photo-modal" onclick="closeMemberPhoto()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:99999;justify-content:center;align-items:center;flex-direction:column;padding:24px;box-sizing:border-box;">
