@@ -1060,5 +1060,32 @@ document.addEventListener('DOMContentLoaded', function(){
   }catch(e){} }
 });
 </script>
+<script>
+/* 지난찬양: 최신 곡이 위로 (HTML은 날짜순 그대로 두고 화면에서만 역순 정렬) */
+document.addEventListener('DOMContentLoaded', function(){
+  try{
+    var arc=document.getElementById('archive'); if(!arc) return;
+    var months=[];
+    arc.querySelectorAll('div').forEach(function(d){
+      var h=d.firstElementChild && d.firstElementChild.firstElementChild;
+      var m=h && h.textContent.trim().match(/^(\d{4})년\s*(\d+)월$/);
+      if(m && d.querySelector('.arc-btn')) months.push({el:d, key:(+m[1])*100+(+m[2])});
+    });
+    if(!months.length) return;
+    var wrap=months[0].el.parentElement;
+    function childOf(parent, el){ while(el && el.parentElement!==parent) el=el.parentElement; return el; }
+    months.forEach(function(mo){
+      var m=mo.el, rows=[];
+      m.querySelectorAll('.arc-btn').forEach(function(b){ var r=childOf(m,b); if(r && rows.indexOf(r)<0) rows.push(r); });
+      if(rows.length<2) return;
+      var anchor=rows[rows.length-1].nextSibling;
+      rows.reverse().forEach(function(r){ m.insertBefore(r, anchor); });
+    });
+    months.sort(function(x,y){ return y.key-x.key; });
+    var first=wrap.firstChild;
+    months.forEach(function(mo){ wrap.insertBefore(mo.el, first); });
+  }catch(e){}
+});
+</script>
 </body>
 </html>
