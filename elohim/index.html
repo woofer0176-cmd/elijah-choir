@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="robots" content="noindex">
 <style>[hidden]{display:none!important}body{margin:0}img{max-width:100%}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
 <title>엘로힘 중창단</title>
@@ -106,6 +107,8 @@ main{display:flex;flex-direction:column;gap:26px;padding-top:20px}
 #pm .crop{position:relative;width:100%;aspect-ratio:16/13.5;max-height:calc(100vh - 110px);overflow:hidden;background:#000}
 #pm iframe{position:absolute;top:-19.7%;left:0;width:100%;height:119.7%;border:0}
 @media (max-width:600px){#pm{padding:8px}#pm .crop{aspect-ratio:auto;height:calc(100vh - 90px);height:calc(100dvh - 90px);max-height:none;background:#fff}#pm iframe{top:0;height:100%}}
+.yt{position:relative;width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#000;box-shadow:var(--sh2)}
+.yt iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .ex{font-size:10.5px;color:var(--dawn);border:1px solid var(--dawn);border-radius:4px;padding:0 5px;font-weight:700}
 
 /* 목록 */
@@ -283,7 +286,7 @@ const PTS={
   s4:["3절 크레셴도 단계적으로","소프라노 고음 머리 공명"],
   s5:["'아멘' 충분히 늘이기","시작음 반주 없이 잡기"]};
 const SONGS_SEED=[
-  {id:"s1",m:1,real:true,title:"너는 물댄 동산 같겠고",voicing:"편성 미정",key:"",url:"https://joongangart.kr/TheWay/05/pop1.html",guide:"창단 첫 연주(3부예배). 찬양가이드를 준비 중입니다."},
+  {id:"s1",m:1,real:true,title:"너는 물댄 동산 같겠고",voicing:"편성 미정",key:"",url:"https://joongangart.kr/TheWay/05/pop1.html",yt:"PYEFwOl5IWw",guide:"창단 첫 연주(3부예배). 찬양가이드를 준비 중입니다."},
   {id:"s3",m:2,title:"참 아름다워라",voicing:"SATB",key:"Eb",guide:"사순절 찬양. 레가토로 길게."},
   {id:"s4",m:3,title:"주 달려 죽은 십자가",voicing:"SATB",key:"D",guide:"부활절 준비곡. 3절 크레셴도 연습."},
   {id:"s5",cat:"송영곡",title:"찬양 성부 성자 성령",voicing:"SATB",key:"G",guide:"예배 시작 송영. 마지막 '아멘'은 충분히 늘여서."}
@@ -294,6 +297,12 @@ const CATS=["월별 연주 찬양","연주한 찬양","송영곡"];
 /* ===== 저장 (이 기기에만) ===== */
 const store={get(k,d){try{const v=localStorage.getItem("elohim6."+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem("elohim2."+k,JSON.stringify(v))}catch(e){}}};
 let role=store.get("role","member"),contacts=store.get("contacts",{}),attendance=store.get("att",{}),songs=store.get("songs",null)||SONGS_SEED.map(s=>({...s}));
+songs.forEach(x=>{const d=SONGS_SEED.find(y=>y.id===x.id);if(d&&d.yt&&x.yt===undefined)x.yt=d.yt});
+function ytId(u){const m=/(?:youtu\.be\/|[?&]v=|\/embed\/|\/shorts\/)([\w-]{11})/.exec(u||"");return m?m[1]:""}
+function ytBlock(s){
+  if(!/github\.io$/.test(location.hostname))return `<a class="btn" href="https://youtu.be/${esc(s.yt)}" target="_blank" rel="noopener">▶ 합창 영상 보기 (유튜브)</a>`;
+  return `<div class="yt"><iframe src="https://www.youtube.com/embed/${esc(s.yt)}?playsinline=1&rel=0" title="${esc(s.title)} 합창 영상" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>`;
+}
 let cat="월별 연주 찬양",partF="all",attDate=null,songPart="S",lastSong=null;
 const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -431,8 +440,9 @@ function partLinks(s){
 }
 function songSheet(id){const s=songs.find(x=>x.id===id);if(!s)return;lastSong=id;
   openSheet(`<div class="kv"><div style="min-width:0"><div class="small muted">${songWhen(s)} · ${esc(s.voicing)}${s.key?` · ${esc(s.key)}조`:""}</div><h2>${esc(s.title)}</h2></div>${closeBtn}</div>
+  ${s.yt?ytBlock(s):""}
   ${s.url?partLinks(s):`<div class="score"><span>악보 이미지 / PDF 자리</span><span>두 손가락으로 확대</span></div>`}
-  ${leader()?`<label class="f">곡 제목<input id="st-${s.id}" value="${esc(s.title)}"></label><div class="two"><label class="f">편성<input id="sv-${s.id}" value="${esc(s.voicing)}"></label><label class="f">조<input id="sk-${s.id}" value="${esc(s.key)}"></label></div><label class="f">악보·음원 링크<input id="su-${s.id}" inputmode="url" value="${esc(s.url||"")}" placeholder="https://"></label><button class="btn soft" data-saveinfo="${s.id}">곡 정보 저장</button>`:""}
+  ${leader()?`<label class="f">곡 제목<input id="st-${s.id}" value="${esc(s.title)}"></label><div class="two"><label class="f">편성<input id="sv-${s.id}" value="${esc(s.voicing)}"></label><label class="f">조<input id="sk-${s.id}" value="${esc(s.key)}"></label></div><label class="f">악보·음원 링크 (중앙아트)<input id="su-${s.id}" inputmode="url" value="${esc(s.url||"")}" placeholder="https://"></label><label class="f">유튜브 링크 (합창 영상)<input id="sy-${s.id}" inputmode="url" value="${s.yt?"https://youtu.be/"+esc(s.yt):""}" placeholder="https://youtu.be/..."></label><button class="btn soft" data-saveinfo="${s.id}">곡 정보 저장</button>`:""}
   ${s.url?`<div class="note">버튼을 누르면 중앙아트 연습 화면이 열립니다. 악보와 함께 해당 파트 음원으로 연습할 수 있습니다.</div>`:`<div class="seg" role="group" aria-label="파트 음원">${[...["S","A","T","B"],"all"].map(p=>`<button data-sp="${p}" aria-pressed="${songPart===p}">${p==="all"?"전체":PARTS[p]}</button>`).join("")}</div>
   <button class="btn" data-play>▶ ${songPart==="all"?"전체":PARTS[songPart]} 음원 듣기</button>`}
   <div class="small muted" style="font-weight:600">연습 포인트</div>
@@ -461,7 +471,7 @@ function sheetClick(e){const t=e.target.closest("button,a");if(!t)return;
   if(t.dataset.savesch){const n=t.dataset.savesch,a=$("#epr").value,b=$("#epf").value,d=sch(+n);sched[n]={};if(a&&a!==ymd(nth(+n,6,2)))sched[n].pr=a;if(b&&b!==ymd(nth(+n,0,3)))sched[n].pf=b;store.set("sched",sched);closeSheet();render();return toast(n+"월 날짜를 저장했습니다")}
   if(t.dataset.resetsch){delete sched[t.dataset.resetsch];store.set("sched",sched);closeSheet();render();return toast("기본 날짜로 되돌렸습니다")}
   if(t.hasAttribute("data-play"))return toast("시안: 실제 앱에서 음원이 재생됩니다");
-  if(t.dataset.saveinfo){const s=songs.find(x=>x.id===t.dataset.saveinfo),g=k=>$("#"+k+"-"+s.id).value.trim();s.title=g("st")||s.title;s.voicing=g("sv");s.key=g("sk");s.url=/^https:\/\//.test(g("su"))?g("su"):"";s.ex=false;store.set("songs",songs);render();songSheet(s.id);return toast("곡 정보를 저장했습니다")}
+  if(t.dataset.saveinfo){const s=songs.find(x=>x.id===t.dataset.saveinfo),g=k=>$("#"+k+"-"+s.id).value.trim();s.title=g("st")||s.title;s.voicing=g("sv");s.key=g("sk");s.url=/^https:\/\//.test(g("su"))?g("su"):"";s.yt=ytId(g("sy"));s.ex=false;store.set("songs",songs);render();songSheet(s.id);return toast("곡 정보를 저장했습니다")}
   if(t.dataset.savepts){const s=songs.find(x=>x.id===t.dataset.savepts);s.pts=$("#p-"+s.id).value.split("\n").map(x=>x.trim()).filter(Boolean);store.set("songs",songs);render();return toast("연습 포인트를 저장했습니다")}
   if(t.dataset.saveguide){const s=songs.find(x=>x.id===t.dataset.saveguide);s.guide=$("#g-"+s.id).value;store.set("songs",songs);return toast("가이드를 저장했습니다")}
   if(t.dataset.savemem){const id=t.dataset.savemem;contacts[id]={phone:$("#ph-"+id).value.trim(),birthday:$("#bd-"+id).value.trim()};store.set("contacts",contacts);closeSheet();render();return toast("저장했습니다")}
