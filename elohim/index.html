@@ -18,15 +18,18 @@
   --f-display:"Gowun Batang","Noto Serif KR",serif;
   --f-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
   --navh:62px;
+  --bg2:#e8eee7; --band1:#1d6e53; --band2:#2e8d69; --mint:#9be6c3; --edge:rgba(255,255,255,.75);
+  --sh1:0 1px 2px rgba(22,48,36,.07),0 6px 16px rgba(22,48,36,.09);
+  --sh2:0 2px 6px rgba(22,48,36,.08),0 16px 34px rgba(22,48,36,.16);
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#121614; --paper:#1b201d; --ink:#e9efe9; --muted:#9aa59f; --line:#2b332e;
   --leaf:#6fcca6; --leaf-soft:#1c3129; --dawn:#f4a66e; --dawn-soft:#3a2a1d;
-  --s:#ee8eaa; --a:#efb267; --t:#7fbde3; --b:#9fc98b; --pi:#b9a2e0; color-scheme:dark}}
+  --s:#ee8eaa; --a:#efb267; --t:#7fbde3; --b:#9fc98b; --pi:#b9a2e0; --bg2:#0e1210; --band1:#123b2d; --band2:#1b5440; --mint:#7fd8b0; --edge:rgba(255,255,255,.05); --sh1:0 1px 2px rgba(0,0,0,.35),0 6px 16px rgba(0,0,0,.35); --sh2:0 2px 6px rgba(0,0,0,.4),0 16px 34px rgba(0,0,0,.5); color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#121614; --paper:#1b201d; --ink:#e9efe9; --muted:#9aa59f; --line:#2b332e;
   --leaf:#6fcca6; --leaf-soft:#1c3129; --dawn:#f4a66e; --dawn-soft:#3a2a1d;
-  --s:#ee8eaa; --a:#efb267; --t:#7fbde3; --b:#9fc98b; --pi:#b9a2e0; color-scheme:dark}
+  --s:#ee8eaa; --a:#efb267; --t:#7fbde3; --b:#9fc98b; --pi:#b9a2e0; --bg2:#0e1210; --band1:#123b2d; --band2:#1b5440; --mint:#7fd8b0; --edge:rgba(255,255,255,.05); --sh1:0 1px 2px rgba(0,0,0,.35),0 6px 16px rgba(0,0,0,.35); --sh2:0 2px 6px rgba(0,0,0,.4),0 16px 34px rgba(0,0,0,.5); color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;-webkit-tap-highlight-color:transparent}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
@@ -186,13 +189,59 @@ label.f input,label.f textarea{font:inherit;color:var(--ink);background:var(--bg
   .sheet{animation:up .24s ease-out}@keyframes up{from{transform:translateY(40px);opacity:.5}}
   .day.pr .head,.day.su .head{animation:pop .5s ease-out both}@keyframes pop{from{transform:rotate(-20deg) scale(.4)}}
 }
+
+/* ===== 입체감 레이어 ===== */
+body{background:var(--bg2)}
+body::before{background:var(--band1)}
+.hero-band{background:linear-gradient(165deg,var(--band1),var(--band2));border-radius:0 0 28px 28px;box-shadow:var(--sh2);padding-bottom:16px;position:relative;overflow:hidden}
+.hero-band::after{content:"";position:absolute;right:-60px;top:-80px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,200,140,.35),transparent 70%);pointer-events:none}
+.hero-band .brand h1{color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.2)}
+.hero-band .brand h1 em{color:#ffc58f}
+.hero-band .eyebrow{color:var(--mint)}
+.hero-band .who{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.25);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.25);position:relative;z-index:1}
+.hero-band .who small{color:rgba(255,255,255,.75)} .hero-band .who b{color:#fff}
+.hero-band .staff{background:
+  linear-gradient(rgba(255,255,255,.22),rgba(255,255,255,.22)) 0 22px/100% 1px no-repeat,
+  linear-gradient(rgba(255,255,255,.22),rgba(255,255,255,.22)) 0 34px/100% 1px no-repeat,
+  linear-gradient(rgba(255,255,255,.22),rgba(255,255,255,.22)) 0 46px/100% 1px no-repeat,
+  linear-gradient(rgba(255,255,255,.22),rgba(255,255,255,.22)) 0 58px/100% 1px no-repeat,
+  linear-gradient(rgba(255,255,255,.22),rgba(255,255,255,.22)) 0 70px/100% 1px no-repeat}
+.hero-band .mon .h.pr{background:var(--mint);box-shadow:0 2px 4px rgba(0,0,0,.25)}
+.hero-band .mon .h.pf{background:#ffb27a;box-shadow:0 2px 4px rgba(0,0,0,.25)}
+.hero-band .mon .lab{color:rgba(255,255,255,.7)} .hero-band .mon.cur .lab{color:#fff}
+.hero-band .mon.cur::after{border-color:#fff;opacity:.6;background:rgba(255,255,255,.08)}
+.hero-band .legend{color:rgba(255,255,255,.8)}
+.hero-band .legend i[style*="leaf"]{background:var(--mint)!important}
+.hero-band .legend i[style*="dawn"]{background:#ffb27a!important}
+main{gap:30px;padding-top:22px}
+.sec-h h2{display:flex;align-items:center;gap:9px}
+.sec-h h2::before{content:"";width:6px;height:18px;border-radius:3px;background:linear-gradient(var(--dawn),var(--leaf));flex-shrink:0}
+.rows,.ring,.mo,.stat,.parts a{border:1px solid var(--edge);box-shadow:var(--sh1)}
+.rows{border-radius:20px}
+.sheetcard{border:1px solid var(--edge);box-shadow:var(--sh2);background:linear-gradient(180deg,var(--paper),color-mix(in srgb,var(--paper) 92%,var(--leaf-soft)))}
+.dawn{box-shadow:var(--sh2);border:1px solid var(--edge);background:linear-gradient(150deg,var(--dawn-soft),var(--paper) 55%,var(--leaf-soft))}
+.dawn .dd{text-shadow:0 3px 10px color-mix(in srgb,var(--dawn) 35%,transparent)}
+.play{background:linear-gradient(150deg,color-mix(in srgb,var(--leaf) 70%,#ffffff),var(--leaf));box-shadow:0 4px 10px color-mix(in srgb,var(--leaf) 40%,transparent),inset 0 1px 0 rgba(255,255,255,.35)}
+.btn{box-shadow:0 6px 14px color-mix(in srgb,var(--leaf) 30%,transparent),inset 0 1px 0 rgba(255,255,255,.25)}
+.btn.soft{box-shadow:var(--sh1)}
+.seg button{border-color:var(--edge);box-shadow:var(--sh1)}
+.seg button[aria-pressed="true"]{background:linear-gradient(150deg,color-mix(in srgb,var(--leaf) 75%,#ffffff),var(--leaf));box-shadow:0 5px 12px color-mix(in srgb,var(--leaf) 35%,transparent)}
+.seg{padding-block:4px 10px}
+.ini{box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+.chip[aria-pressed="true"] .ini{box-shadow:0 6px 14px color-mix(in srgb,var(--p) 45%,transparent)}
+.mo.special{border-color:transparent;background:linear-gradient(160deg,var(--dawn-soft),var(--paper))}
+.mix{box-shadow:inset 0 1px 2px rgba(0,0,0,.15)}
+nav.pill{box-shadow:0 14px 34px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.08)}
+nav.pill a[aria-current="page"]{box-shadow:0 4px 12px color-mix(in srgb,var(--leaf) 50%,transparent)}
+.r,.sheetcard,.parts a,.seg button,.btn,.chip{transition:transform .12s ease}
+.r:active,.sheetcard:active,.parts a:active,.btn:active,.chip:active{transform:scale(.98)}
 </style>
 </head>
 <body>
 
 
 <div class="app">
-  <div class="wrap">
+  <div class="wrap hero-band">
     <div class="top">
       <div class="brand">
         <div class="eyebrow">ELOHIM ENSEMBLE · 2027</div>
