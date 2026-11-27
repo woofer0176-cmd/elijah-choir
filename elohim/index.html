@@ -334,7 +334,8 @@ const parse=x=>{const[y,m,d]=x.split("-").map(Number);return new Date(y,m-1,d)};
 const SY=2027;
 let sched=store.get("sched",{}); /* 월별로 옮긴 날짜 {"3":{pr:"2027-03-06",pf:"..."}} */
 function nth(m,dow,n){const d=new Date(SY,m-1,1);d.setDate(1+(dow-d.getDay()+7)%7+7*(n-1));return d}
-function sch(m){const o=sched[m]||{};return{pr:o.pr?parse(o.pr):nth(m,6,2),pf:o.pf?parse(o.pf):nth(m,0,3),moved:!!(o.pr||o.pf)}}
+function eve(d){const x=new Date(d);x.setDate(x.getDate()-1);return x}
+function sch(m){const o=sched[m]||{},pf=o.pf?parse(o.pf):nth(m,0,3);return{pr:o.pr?parse(o.pr):eve(pf),pf,moved:!!(o.pr||o.pf)}}
 function upcoming(k){for(let m=1;m<=12;m++){const d=sch(m)[k];if(d>=today)return{m,d}}return null}
 const md=x=>{const d=typeof x==="string"?parse(x):x;return`${d.getMonth()+1}/${d.getDate()}`};
 const dn=d=>{const n=Math.round((d-today)/864e5);return n===0?"오늘":n>0?`D-${n}`:"지남"};
@@ -346,7 +347,7 @@ function staff(){
   const c=curMonth(),st=Math.min(Math.max(c,1),7);
   return `<div class="staff" aria-label="다가오는 연습과 연주">${[...Array(6)].map((_,i)=>{const m=st+i,x=sch(m);
     return `<div class="mon ${m===c?"cur":""} ${x.moved?"moved":""}"><span class="h pr"></span><span class="h pf"></span><span class="lab">${m}월<br>${x.pr.getDate()}·${x.pf.getDate()}</span></div>`}).join("")}</div>
-  <div class="legend"><span><i style="background:var(--leaf)"></i>연습 · 2주 토</span><span><i style="background:var(--dawn)"></i>연주 · 3주 주일 3부예배</span></div>`;
+  <div class="legend"><span><i style="background:var(--leaf)"></i>연습 · 연주 전날 토</span><span><i style="background:var(--dawn)"></i>연주 · 3주 주일 3부예배</span></div>`;
 }
 
 /* ===== 화면 ===== */
@@ -364,7 +365,7 @@ V.home=()=>{
         :`<section class="dawn"><div class="dd"><small>${ev[0]}월</small>${esc(ev[1]).slice(0,2)}</div><b>${esc(ev[1])}</b><span>${esc(ev[2])}</span></section>`}
   <section class="sec"><div class="sec-h"><h2>다가오는 두 날</h2><a href="#news">연간 일정 ›</a></div>
     <div class="rows">
-      ${np?`<a class="r" href="#attend" style="text-decoration:none"><span class="dot" style="background:var(--leaf)"></span><div class="grow"><div class="t">연습 · ${md(np.d)} (토)</div><div class="small muted">${np.m}월 2주 토요일 · 120분 · 출석 ${pres}/${MEMBERS.length}</div></div><b class="num" style="color:var(--leaf)">${dn(np.d)}</b></a>`:""}
+      ${np?`<a class="r" href="#attend" style="text-decoration:none"><span class="dot" style="background:var(--leaf)"></span><div class="grow"><div class="t">연습 · ${md(np.d)} (토)</div><div class="small muted">연주 전날 토요일 · 120분 · 출석 ${pres}/${MEMBERS.length}</div></div><b class="num" style="color:var(--leaf)">${dn(np.d)}</b></a>`:""}
       ${nf?`<div class="r" style="cursor:default"><span class="dot" style="background:var(--dawn)"></span><div class="grow"><div class="t">연주 · ${md(nf.d)} (주일) 3부예배</div><div class="small muted">${nf.m}월 ${esc(EVENTS[nf.m-1][1])}</div></div><b class="num" style="color:var(--dawn)">${dn(nf.d)}</b></div>`:""}
     </div>
     <p class="note">날짜는 교회 일정에 따라 바뀔 수 있습니다. 바뀐 달은 위 오선에 * 표시가 붙습니다.</p></section>
@@ -475,7 +476,7 @@ function memSheet(id){const m=MEMBERS.find(x=>x.id===id),c=contacts[id]||{};
 function evSheet(n){const e=EVENTS[n-1],x=sch(n);
   openSheet(`<div class="kv"><div><div class="small muted">2027년 ${e[0]}월</div><h2>${esc(e[1])}</h2></div>${closeBtn}</div>
   <div class="guide">${esc(e[2]||"비고 없음")}</div>
-  ${leader()?`<label class="f">연습 날짜 (기본: 2주 토요일)<input type="date" id="epr" value="${ymd(x.pr)}"></label>
+  ${leader()?`<label class="f">연습 날짜 (기본: 연주 전날 토요일)<input type="date" id="epr" value="${ymd(x.pr)}"></label>
     <label class="f">연주 날짜 (기본: 3주 주일 3부예배)<input type="date" id="epf" value="${ymd(x.pf)}"></label>
     <div class="two"><button class="btn" data-savesch="${n}">날짜 저장</button><button class="btn soft" data-resetsch="${n}">기본 날짜로</button></div>`
   :`<div class="kv"><span class="muted">연습</span><b>${md(x.pr)} (토)</b></div><div class="kv"><span class="muted">연주</span><b>${md(x.pf)} (주일) 3부예배</b></div>`}`)}
@@ -483,7 +484,7 @@ function sheetClick(e){const t=e.target.closest("button,a");if(!t)return;
   if(t.dataset.player&&INLINE){e.preventDefault();$("#pmT").textContent=t.dataset.player;$("#pmF").src=t.href;$("#pm").hidden=false;fitPlayer();return}
   if(t.hasAttribute("data-close"))return closeSheet();
   if(t.dataset.sp){songPart=t.dataset.sp;return songSheet(lastSong)}
-  if(t.dataset.savesch){const n=t.dataset.savesch,a=$("#epr").value,b=$("#epf").value,d=sch(+n);sched[n]={};if(a&&a!==ymd(nth(+n,6,2)))sched[n].pr=a;if(b&&b!==ymd(nth(+n,0,3)))sched[n].pf=b;store.set("sched",sched);closeSheet();render();return toast(n+"월 날짜를 저장했습니다")}
+  if(t.dataset.savesch){const n=t.dataset.savesch,a=$("#epr").value,b=$("#epf").value,d=sch(+n);sched[n]={};const bf=b||ymd(nth(+n,0,3));if(b&&b!==ymd(nth(+n,0,3)))sched[n].pf=b;if(a&&a!==ymd(eve(parse(bf))))sched[n].pr=a;store.set("sched",sched);closeSheet();render();return toast(n+"월 날짜를 저장했습니다")}
   if(t.dataset.resetsch){delete sched[t.dataset.resetsch];store.set("sched",sched);closeSheet();render();return toast("기본 날짜로 되돌렸습니다")}
   if(t.hasAttribute("data-play"))return toast("시안: 실제 앱에서 음원이 재생됩니다");
   if(t.dataset.saveinfo){const s=songs.find(x=>x.id===t.dataset.saveinfo),g=k=>$("#"+k+"-"+s.id).value.trim();s.title=g("st")||s.title;s.voicing=g("sv");s.key=g("sk");s.url=/^https:\/\//.test(g("su"))?g("su"):"";s.yt=ytId(g("sy"));s.ex=false;store.set("songs",songs);render();songSheet(s.id);return toast("곡 정보를 저장했습니다")}
