@@ -298,6 +298,7 @@ let cat="월별 연주 찬양",partF="all",attDate=null,songPart="S",lastSong=nu
 const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const leader=()=>role==="leader";
+const byName=(a,b)=>a.name.localeCompare(b.name,"ko");
 const cnt=p=>MEMBERS.filter(m=>m.part===p).length;
 function toast(t){document.querySelectorAll(".toast").forEach(e=>e.remove());const d=document.createElement("div");d.className="toast";d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),1800)}
 
@@ -381,7 +382,7 @@ V.members=()=>{
   return `
   <section class="sec"><div class="sec-h"><h2>섬기는 소중한 분들 <span class="num" style="color:var(--leaf)">${MEMBERS.length}</span></h2><span class="small muted">노래 ${MEMBERS.length-cnt("P")} · 반주 ${cnt("P")}</span></div>${mix()}</section>
   <div class="seg" role="group" aria-label="파트">${[["all","전체"],...ALL.map(p=>[p,PARTS[p]])].map(([k,l])=>`<button data-pf="${k}" aria-pressed="${partF===k}">${l}</button>`).join("")}</div>
-  <section class="sec"><div class="rows">${order.flatMap(p=>MEMBERS.filter(m=>m.part===p)).map(m=>`
+  <section class="sec"><div class="rows">${MEMBERS.filter(m=>order.includes(m.part)).sort(byName).map(m=>`
     <button class="r ${m.part}" data-mem="${m.id}"><span class="ini">${esc(m.name[0])}</span><div class="grow"><div class="t">${esc(m.name)} ${m.role.map(r=>`<span class="badge">${r}</span>`).join(" ")}</div><div class="small muted">${PARTS[m.part]} · ${contacts[m.id]?.phone?esc(contacts[m.id].phone):"연락처 미등록"}</div></div><span class="muted">›</span></button>`).join("")}</div>
   <p class="note">${leader()?"이름을 눌러 연락처와 생일을 입력하세요.":"연락처는 지휘자 보기에서 입력합니다."}</p></section>`;
 };
@@ -393,7 +394,7 @@ V.attend=()=>{
   <div class="seg" role="group" aria-label="연습 날짜">${ds.map(d=>`<button data-ad="${d}" aria-pressed="${d===attDate}">${md(d)} 토</button>`).join("")}</div>
   <div class="ring"><svg viewBox="0 0 76 76" aria-hidden="true"><circle cx="38" cy="38" r="30" fill="none" stroke="var(--line)" stroke-width="8"/><circle cx="38" cy="38" r="30" fill="none" stroke="var(--leaf)" stroke-width="8" stroke-linecap="round" stroke-dasharray="${C*pct/100} ${C}" transform="rotate(-90 38 38)"/></svg>
     <div><div class="big num">${pres.size}<span class="small muted"> / ${MEMBERS.length}명</span></div><div class="small muted">${ALL.map(p=>`${p==="P"?"반주":p} ${MEMBERS.filter(m=>m.part===p&&pres.has(m.id)).length}/${cnt(p)}`).join(" · ")}</div></div></div>
-  ${ALL.map(p=>`<section class="sec"><div class="sec-h"><h2 style="font-size:16px">${PARTS[p]}</h2></div><div class="chips">${MEMBERS.filter(m=>m.part===p).map(m=>`
+  ${ALL.map(p=>`<section class="sec"><div class="sec-h"><h2 style="font-size:16px">${PARTS[p]}</h2></div><div class="chips">${MEMBERS.filter(m=>m.part===p).sort(byName).map(m=>`
     <button class="chip ${p}" data-att="${m.id}" aria-pressed="${pres.has(m.id)}" ${leader()?"":"disabled"}><span class="ini">${esc(m.name[0])}</span><span>${esc(m.name)}</span></button>`).join("")}</div></section>`).join("")}
   <p class="note">${leader()?"얼굴 동그라미를 누르면 출석, 다시 누르면 취소됩니다.":"출석 체크는 지휘자 보기에서 합니다."} 시안에서는 이 기기에만 저장됩니다.</p>`;
 };
